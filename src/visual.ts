@@ -53,7 +53,8 @@ export class Visual implements IVisual {
     
         // Draw the Quad Chart with the updated settings, measure values, and measure titles
         this.quadChart.drawChart(width, height, separatorSettings, shapeSettings, measureValues, measureTitles);
-    }    
+    }
+       
 
     private getMeasureValuesAndTitles(dataView: DataView): { values: number[], titles: string[] } {
         const valuesArray = dataView?.categorical?.values;
@@ -66,16 +67,17 @@ export class Visual implements IVisual {
             ];
     
             const measureTitles = [
-                valuesArray[0]?.source?.displayName || '',
-                valuesArray[1]?.source?.displayName || '',
-                valuesArray[2]?.source?.displayName || '',
-                valuesArray[3]?.source?.displayName || ''
+                valuesArray[0]?.source?.displayName || 'Measure 1',
+                valuesArray[1]?.source?.displayName || 'Measure 2',
+                valuesArray[2]?.source?.displayName || 'Measure 3',
+                valuesArray[3]?.source?.displayName || 'Measure 4'
             ];
     
             return { values: measureValues, titles: measureTitles };
         }
-        return { values: [0, 0, 0, 0], titles: ['', '', '', ''] };
-    }    
+        return { values: [0, 0, 0, 0], titles: ['Measure 1', 'Measure 2', 'Measure 3', 'Measure 4'] };
+    }
+    
     
     private toNumber(value: PrimitiveValue): number {
         return typeof value === 'number' ? value : isNaN(Number(value)) ? 0 : Number(value);

@@ -1,4 +1,3 @@
-//Label.ts
 import * as d3 from 'd3';
 
 export class Label {
@@ -10,17 +9,13 @@ export class Label {
 
     public drawLabel(x: number, y: number, text: string, position: string): void {
         let labelX = x;
-        let labelY = y;
-
-        if (position === 'above') {
-            labelY -= 40; // Adjust the label position above the shape
-        }
+        let labelY = position === 'above' ? y - 35 : y;
 
         this.container.append('text')
             .attr('x', labelX)
             .attr('y', labelY)
             .attr('text-anchor', 'middle')
-            .attr('dominant-baseline', position === 'centered' ? 'middle' : 'baseline')
+            .attr('dominant-baseline', position === 'centered' ? 'middle' : 'bottom')
             .attr('font-size', '12px')
             .attr('fill', 'black')
             .text(text);
