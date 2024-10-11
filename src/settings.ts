@@ -15,5 +15,5 @@ export class SeparatorSettings {
 export class ShapeSettings {
     public shapeColor: string = "#ff0000"; // Default color for all shapes
     public shapeType: string = "circle";   // Default shape type for all quadrants
+    public labelPosition: string = "centered";
 }
-

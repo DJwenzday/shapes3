@@ -75,10 +75,19 @@
                     {"value": "triangle", "displayName": "Triangle"}
                 ]
             }
-          }
+          },
+          "labelPosition": {
+            "displayName": "Label Position",
+            "type": { 
+                "enumeration": [
+                { "value": "centered", "displayName": "Centered" },
+                { "value": "above", "displayName": "Above" }
+                ]
+            }
         }
     }
-    },
+}
+},
     "privileges": []
   }
   

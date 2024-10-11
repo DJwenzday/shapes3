@@ -11,4 +11,5 @@ export declare class SeparatorSettings {
 export declare class ShapeSettings {
     shapeColor: string;
     shapeType: string;
+    labelPosition: string;
 }

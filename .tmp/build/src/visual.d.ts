@@ -12,7 +12,7 @@ export declare class Visual implements IVisual {
     private settings;
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
-    private getMeasureValues;
+    private getMeasureValuesAndTitles;
     private toNumber;
     private static parseSettings;
     enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration;

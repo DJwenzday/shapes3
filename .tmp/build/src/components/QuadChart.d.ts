@@ -3,8 +3,9 @@ export declare class QuadChart {
     private container;
     private separators;
     private shapeDrawer;
+    private labelDrawer;
     private tooltipService;
     constructor(container: d3.Selection<SVGElement, unknown, HTMLElement, any>);
-    drawChart(width: number, height: number, separatorSettings: any, shapeSettings: any, measureValues: number[]): void;
-    private drawShapeWithTooltip;
+    drawChart(width: number, height: number, separatorSettings: any, shapeSettings: any, measureValues: number[], measureTitles: string[]): void;
+    private drawShapeWithLabel;
 }

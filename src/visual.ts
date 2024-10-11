@@ -34,38 +34,48 @@ export class Visual implements IVisual {
     public update(options: VisualUpdateOptions) {
         // Parse the settings from the data view
         this.settings = Visual.parseSettings(options.dataViews && options.dataViews[0]);
-
+    
         const width = options.viewport.width;
         const height = options.viewport.height;
-
+    
         const dataView = options.dataViews && options.dataViews[0];
-
-        // Extract measure values from the dataView using the categorical structure
-        const measureValues = this.getMeasureValues(dataView);
-
+    
+        // Extract measure values and titles from the dataView using the categorical structure
+        const { values: measureValues, titles: measureTitles } = this.getMeasureValuesAndTitles(dataView);
+    
         // Get the shape and separator settings from the property pane
         const separatorSettings = this.settings.separator;
         const shapeSettings = {
             color: this.settings.shapeSettings.shapeColor,
             type: this.settings.shapeSettings.shapeType,
+            labelPosition: this.settings.shapeSettings.labelPosition, // Ensure label position is included
         };
+    
+        // Draw the Quad Chart with the updated settings, measure values, and measure titles
+        this.quadChart.drawChart(width, height, separatorSettings, shapeSettings, measureValues, measureTitles);
+    }    
 
-        // Draw the Quad Chart with the updated settings and measure values
-        this.quadChart.drawChart(width, height, separatorSettings, shapeSettings, measureValues);
-    }
-
-    private getMeasureValues(dataView: DataView): number[] {
+    private getMeasureValuesAndTitles(dataView: DataView): { values: number[], titles: string[] } {
         const valuesArray = dataView?.categorical?.values;
         if (valuesArray && valuesArray.length >= 4) {
-            return [
+            const measureValues = [
                 this.toNumber(valuesArray[0]?.values[0]),
                 this.toNumber(valuesArray[1]?.values[0]),
                 this.toNumber(valuesArray[2]?.values[0]),
                 this.toNumber(valuesArray[3]?.values[0])
             ];
+    
+            const measureTitles = [
+                valuesArray[0]?.source?.displayName || '',
+                valuesArray[1]?.source?.displayName || '',
+                valuesArray[2]?.source?.displayName || '',
+                valuesArray[3]?.source?.displayName || ''
+            ];
+    
+            return { values: measureValues, titles: measureTitles };
         }
-        return [0, 0, 0, 0]; // Default values if data is not available
-    }
+        return { values: [0, 0, 0, 0], titles: ['', '', '', ''] };
+    }    
     
     private toNumber(value: PrimitiveValue): number {
         return typeof value === 'number' ? value : isNaN(Number(value)) ? 0 : Number(value);
