@@ -44,7 +44,7 @@ export class Visual implements IVisual {
         const { values: measureValues, titles: measureTitles } = this.getMeasureValuesAndTitles(dataView);
     
         // Get the shape and separator settings from the property pane
-        const separatorSettings = this.settings.separator;
+        const separatorSettings = this.settings.separatorSettings;
         const shapeSettings = {
             color: this.settings.shapeSettings.shapeColor,
             type: this.settings.shapeSettings.shapeType,
