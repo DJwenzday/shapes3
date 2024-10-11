@@ -16,8 +16,11 @@ export declare class ShapeSettings {
     shapeColor: string;
     shapeType: string;
     labelPosition: string;
+    font: string;
+    fontSize: number;
 }
 export declare class MeasureSettings {
     shapeFillColor: string;
     shapeStrokeColor: string;
+    labelFontColor: string;
 }

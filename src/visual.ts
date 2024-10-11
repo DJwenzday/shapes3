@@ -31,45 +31,57 @@ export class Visual implements IVisual {
         this.quadChart = new QuadChart(this.svg);
     }
 
+    private extractValue(value: PrimitiveValue | undefined): string | number {
+        if (typeof value === 'string' || typeof value === 'number') {
+            return value;
+        }
+        return '0'; // Default to '0' as a string if the value is not a string or number
+    }    
+
     public update(options: VisualUpdateOptions) {
-        // Parse the settings from the data view
         this.settings = Visual.parseSettings(options.dataViews && options.dataViews[0]);
     
         const width = options.viewport.width;
         const height = options.viewport.height;
-    
         const dataView = options.dataViews && options.dataViews[0];
     
-        // Extract measure values and titles from the dataView
         const { values: measureValues, titles: measureTitles } = this.getMeasureValuesAndTitles(dataView);
     
-        // Get the shape and separator settings from the property pane
         const separatorSettings = this.settings.separatorSettings;
         const shapeSettings = {
             color: this.settings.shapeSettings.shapeColor,
             type: this.settings.shapeSettings.shapeType,
             labelPosition: this.settings.shapeSettings.labelPosition,
+            font: this.settings.shapeSettings.font,
+            fontSize: this.settings.shapeSettings.fontSize
         };
     
-        console.log('Shape Settings:', shapeSettings); // Debugging statement
-        console.log('Measure Values:', measureValues); // Debugging statement
-        console.log('Measure Titles:', measureTitles); // Debugging statement
-    
-        // Draw the Quad Chart with the updated settings, measure values, and measure titles
-        this.quadChart.drawChart(width, height, separatorSettings, shapeSettings, measureValues, measureTitles);
+        // Draw the Quad Chart with the updated settings, passing individual measure settings for each label
+        this.quadChart.drawChart(
+            width,
+            height,
+            separatorSettings,
+            shapeSettings,
+            measureValues,
+            measureTitles,
+            [
+                this.settings.measure1Settings,
+                this.settings.measure2Settings,
+                this.settings.measure3Settings,
+                this.settings.measure4Settings
+            ]
+        );
     }
     
     
-       
-
-    private getMeasureValuesAndTitles(dataView: DataView): { values: number[], titles: string[] } {
+    private getMeasureValuesAndTitles(dataView: DataView): { values: (string | number)[], titles: string[] } {
         const valuesArray = dataView?.categorical?.values;
         if (valuesArray && valuesArray.length > 0) {
             const measureValues = [
-                this.toNumber(valuesArray.find(value => value.source.roles && value.source.roles['shape1measure'])?.values[0]) || 0,
-                this.toNumber(valuesArray.find(value => value.source.roles && value.source.roles['shape2measure'])?.values[1]) || 1,
-                this.toNumber(valuesArray.find(value => value.source.roles && value.source.roles['shape3measure'])?.values[2]) || 2,
-                this.toNumber(valuesArray.find(value => value.source.roles && value.source.roles['shape4measure'])?.values[3]) || 3
+                this.extractValue(valuesArray.find(value => value.source.roles && value.source.roles['shape1measure'])?.values[0]),
+                this.extractValue(valuesArray.find(value => value.source.roles && value.source.roles['shape2measure'])?.values[0]),
+                this.extractValue(valuesArray.find(value => value.source.roles && value.source.roles['shape3measure'])?.values[0]),
+                this.extractValue(valuesArray.find(value => value.source.roles && value.source.roles['shape4measure'])?.values[0])
             ];
     
             const measureTitles = [
@@ -81,11 +93,8 @@ export class Visual implements IVisual {
     
             return { values: measureValues, titles: measureTitles };
         }
-        return { values: [0, 1, 2, 3], titles: ['Shape 1', 'Shape 2', 'Shape 3', 'Shape 4'] };
+        return { values: [0, 0, 0, 0], titles: ['Shape 1', 'Shape 2', 'Shape 3', 'Shape 4'] };
     }
-    
-    
-    
     
     
     private toNumber(value: PrimitiveValue): number {

@@ -1,3 +1,4 @@
+//settings.ts
 import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
 import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 
@@ -19,9 +20,12 @@ export class ShapeSettings {
     public shapeColor: string = "#ff0000"; // Default color for all shapes
     public shapeType: string = "circle";   // Default shape type for all quadrants
     public labelPosition: string = "centered";
+    public font: string = "Segoe UI";
+    public fontSize: number = 12;
 }
 
 export class MeasureSettings {
     public shapeFillColor: string = "#ff0000";  // Default fill color
     public shapeStrokeColor: string = "#000000";  // Default stroke color
+    public labelFontColor: string = "#000000";  //Default font colot for the label
 }

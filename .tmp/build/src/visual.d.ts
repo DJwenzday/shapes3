@@ -11,6 +11,7 @@ export declare class Visual implements IVisual {
     private quadChart;
     private settings;
     constructor(options: VisualConstructorOptions);
+    private extractValue;
     update(options: VisualUpdateOptions): void;
     private getMeasureValuesAndTitles;
     private toNumber;

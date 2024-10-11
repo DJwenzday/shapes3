@@ -107,6 +107,16 @@
                     "displayName": "Shape Stroke",
                     "type": { "fill": { "solid": { "color": true } } },
                     "rule": { "ruleType": "formatting" }
+                },
+                "labelFontColor": {
+                    "displayName": "Font Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -122,6 +132,16 @@
                     "displayName": "Shape Stroke",
                     "type": { "fill": { "solid": { "color": true } } },
                     "rule": { "ruleType": "formatting" }
+                },
+                "labelFontColor": {
+                    "displayName": "Font Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -137,6 +157,16 @@
                     "displayName": "Shape Stroke",
                     "type": { "fill": { "solid": { "color": true } } },
                     "rule": { "ruleType": "formatting" }
+                },
+                "labelFontColor": {
+                    "displayName": "Font Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -152,6 +182,16 @@
                     "displayName": "Shape Stroke",
                     "type": { "fill": { "solid": { "color": true } } },
                     "rule": { "ruleType": "formatting" }
+                },
+                "labelFontColor": {
+                    "displayName": "Font Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
                 }
             }
         }
