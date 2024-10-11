@@ -40,7 +40,7 @@ export class Visual implements IVisual {
     
         const dataView = options.dataViews && options.dataViews[0];
     
-        // Extract measure values and titles from the dataView using the categorical structure
+        // Extract measure values and titles from the dataView
         const { values: measureValues, titles: measureTitles } = this.getMeasureValuesAndTitles(dataView);
     
         // Get the shape and separator settings from the property pane
@@ -48,35 +48,44 @@ export class Visual implements IVisual {
         const shapeSettings = {
             color: this.settings.shapeSettings.shapeColor,
             type: this.settings.shapeSettings.shapeType,
-            labelPosition: this.settings.shapeSettings.labelPosition, // Ensure label position is included
+            labelPosition: this.settings.shapeSettings.labelPosition,
         };
+    
+        console.log('Shape Settings:', shapeSettings); // Debugging statement
+        console.log('Measure Values:', measureValues); // Debugging statement
+        console.log('Measure Titles:', measureTitles); // Debugging statement
     
         // Draw the Quad Chart with the updated settings, measure values, and measure titles
         this.quadChart.drawChart(width, height, separatorSettings, shapeSettings, measureValues, measureTitles);
     }
+    
+    
        
 
     private getMeasureValuesAndTitles(dataView: DataView): { values: number[], titles: string[] } {
         const valuesArray = dataView?.categorical?.values;
-        if (valuesArray && valuesArray.length >= 4) {
+        if (valuesArray && valuesArray.length > 0) {
             const measureValues = [
-                this.toNumber(valuesArray[0]?.values[0]),
-                this.toNumber(valuesArray[1]?.values[0]),
-                this.toNumber(valuesArray[2]?.values[0]),
-                this.toNumber(valuesArray[3]?.values[0])
+                this.toNumber(valuesArray.find(value => value.source.roles && value.source.roles['shape1measure'])?.values[0]) || 0,
+                this.toNumber(valuesArray.find(value => value.source.roles && value.source.roles['shape2measure'])?.values[1]) || 1,
+                this.toNumber(valuesArray.find(value => value.source.roles && value.source.roles['shape3measure'])?.values[2]) || 2,
+                this.toNumber(valuesArray.find(value => value.source.roles && value.source.roles['shape4measure'])?.values[3]) || 3
             ];
     
             const measureTitles = [
-                valuesArray[0]?.source?.displayName || 'Measure 1',
-                valuesArray[1]?.source?.displayName || 'Measure 2',
-                valuesArray[2]?.source?.displayName || 'Measure 3',
-                valuesArray[3]?.source?.displayName || 'Measure 4'
+                valuesArray.find(value => value.source.roles && value.source.roles['shape1measure'])?.source?.displayName || 'Shape 1',
+                valuesArray.find(value => value.source.roles && value.source.roles['shape2measure'])?.source?.displayName || 'Shape 2',
+                valuesArray.find(value => value.source.roles && value.source.roles['shape3measure'])?.source?.displayName || 'Shape 3',
+                valuesArray.find(value => value.source.roles && value.source.roles['shape4measure'])?.source?.displayName || 'Shape 4'
             ];
     
             return { values: measureValues, titles: measureTitles };
         }
-        return { values: [0, 0, 0, 0], titles: ['Measure 1', 'Measure 2', 'Measure 3', 'Measure 4'] };
+        return { values: [0, 1, 2, 3], titles: ['Shape 1', 'Shape 2', 'Shape 3', 'Shape 4'] };
     }
+    
+    
+    
     
     
     private toNumber(value: PrimitiveValue): number {

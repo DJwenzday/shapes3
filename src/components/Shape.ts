@@ -7,7 +7,7 @@ export class Shape {
         this.container = container;
     }
 
-    public drawShape(x: number, y: number, shapeData: any, sizeModifier: number): d3.Selection<SVGElement, unknown, HTMLElement, any> {
+    public drawShape(x: number, y: number, shapeData: any): d3.Selection<SVGElement, unknown, HTMLElement, any> {
         const shapeType = shapeData.type || 'circle';
         const color = shapeData.color || 'blue';
 
@@ -17,21 +17,24 @@ export class Shape {
                 shapeElement = this.container.append('circle')
                     .attr('cx', x)
                     .attr('cy', y)
-                    .attr('r', 20 + sizeModifier * 5)  // Adjust size based on measure value
+                    .attr('r', 30)  // Fixed size for circle
                     .attr('fill', color);
                 break;
             case 'square':
                 shapeElement = this.container.append('rect')
-                    .attr('x', x - (25 + sizeModifier * 2))
-                    .attr('y', y - (25 + sizeModifier * 2))
-                    .attr('width', 50 + sizeModifier * 4)
-                    .attr('height', 50 + sizeModifier * 4)
+                    .attr('x', x - 25)
+                    .attr('y', y - 25)
+                    .attr('width', 50)  // Fixed width and height for square
+                    .attr('height', 50)
                     .attr('fill', color);
                 break;
             case 'triangle':
                 shapeElement = this.container.append('polygon')
-                    .attr('points', `${x},${y - 30 - sizeModifier * 5} ${x - 26 - sizeModifier * 3},${y + 15 + sizeModifier * 5} ${x + 26 + sizeModifier * 3},${y + 15 + sizeModifier * 5}`)
+                    .attr('points', `${x},${y - 30} ${x - 26},${y + 15} ${x + 26},${y + 15}`)
                     .attr('fill', color);
+                break;
+            default:
+                console.error('Invalid shape type:', shapeType);
                 break;
         }
         return shapeElement;

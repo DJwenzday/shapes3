@@ -34,15 +34,16 @@ export class QuadChart {
         this.drawShapeWithLabel((3 * width) / 4, (3 * height) / 4, shapeSettings, 'Bottom-Right Quadrant', measureValues[3], measureTitles[3]);
     }
 
-    private drawShapeWithLabel(x: number, y: number, shapeSettings: any, tooltipText: string, sizeModifier: number, labelText: string): void {
-        const shapeElement = this.shapeDrawer.drawShape(x, y, shapeSettings, sizeModifier);
-
+    private drawShapeWithLabel(x: number, y: number, shapeSettings: any, tooltipText: string, p0: number, labelText: string): void {
+        const shapeElement = this.shapeDrawer.drawShape(x, y, shapeSettings);
+    
         // Draw the label based on the shape's position and user settings
         this.labelDrawer.drawLabel(x, y, labelText, shapeSettings.labelPosition);
-
+    
         // Apply tooltip functionality
         shapeElement
             .on('mouseover', (event: MouseEvent) => this.tooltipService.showTooltip(tooltipText, event))
             .on('mouseout', () => this.tooltipService.hideTooltip());
-    }
+    }    
+    
 }
