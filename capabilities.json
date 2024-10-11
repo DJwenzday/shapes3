@@ -1,0 +1,84 @@
+{
+    "dataRoles": [
+      {
+        "name": "shape1measure",
+        "displayName": "Shape1 Measure",
+        "kind": "Measure"
+      },
+      {
+        "name": "shape2measure",
+        "displayName": "Shape2 Measure",
+        "kind": "Measure"
+      },
+      {
+        "name": "shape3measure",
+        "displayName": "Shape3 Measure",
+        "kind": "Measure"
+      },
+      {
+        "name": "shape4measure",
+        "displayName": "Shape4 Measure",
+        "kind": "Measure"
+      }
+    ],
+    
+    "dataViewMappings": [
+      {
+        "conditions": [
+          {
+            "shape1measure": { "max": 1 },
+            "shape2measure": { "max": 1 },
+            "shape3measure": { "max": 1 },
+            "shape4measure": { "max": 1 }
+          }
+        ],
+        "categorical": {
+          "values": {
+            "select": [
+              { "bind": { "to": "shape1measure" } },
+              { "bind": { "to": "shape2measure" } },
+              { "bind": { "to": "shape3measure" } },
+              { "bind": { "to": "shape4measure" } }
+            ]
+          }
+        }
+      }
+    ],
+  
+    "objects": {
+      "separator": {
+        "displayName": "Separator Settings",
+        "properties": {
+          "color": {
+            "displayName": "Color",
+            "type": { "fill": { "solid": { "color": true } } }
+          },
+          "width": {
+            "displayName": "Width",
+            "type": { "numeric": true }
+          }
+        }
+      },
+      "shapeSettings": {
+        "displayName": "Shape Settings",
+        "properties": {
+          "shapeColor": {
+            "displayName": "Shape Color",
+            "type": { "fill": { "solid": { "color": true } } }
+          },
+          "shapeType": {
+            "displayName": "Shape Type",
+            "type": { 
+                "enumeration": [
+                    { "value": "circle", "displayName": "Circle" },
+                    { "value": "square", "displayName": "Square" },
+                    {"value": "triangle", "displayName": "Triangle"}
+                ]
+            }
+          }
+        }
+    }
+    },
+    "privileges": []
+  }
+  
