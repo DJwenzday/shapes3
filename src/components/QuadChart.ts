@@ -1,3 +1,4 @@
+//QuadChart.ts
 import * as d3 from 'd3';
 import { Separators } from './Separators';
 import { Shape } from './Shape';

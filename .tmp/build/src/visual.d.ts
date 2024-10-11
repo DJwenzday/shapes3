@@ -1,20 +1,20 @@
 import powerbi from "powerbi-visuals-api";
-import "./../style/visual.less";
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+import "./../style/visual.less";
 export declare class Visual implements IVisual {
     private target;
     private svg;
     private quadChart;
+    private formattingService;
     private settings;
     constructor(options: VisualConstructorOptions);
     private extractValue;
+    private getConditionalFormattingColor;
     update(options: VisualUpdateOptions): void;
     private getMeasureValuesAndTitles;
     private toNumber;
     private static parseSettings;
-    enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration;
+    getFormattingModel(): powerbi.visuals.FormattingModel;
 }

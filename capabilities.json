@@ -114,7 +114,8 @@
                         "fill": {
                             "solid": {
                                 "color": true
-                            }
+                            },
+                            "rule": { "ruleType": "formatting" }
                         }
                     }
                 }

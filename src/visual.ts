@@ -2,26 +2,38 @@
 import * as d3 from 'd3';
 import powerbi from "powerbi-visuals-api";
 import DataView  = powerbi.DataView;
+import IDataViewObject = powerbi.DataViewObject;
+import DataViewObjects = powerbi.DataViewObjects;
+//import DataViewObjects = powerbi.DataViewObjects;
+//import { DataViewObjects } from "powerbi-visuals-utils-dataviewutils/lib/dataViewObjects";
 import PrimitiveValue = powerbi.PrimitiveValue;
+//import IColorValue = powerbi.visuals.FormattingProperties.ColorValue;
+import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
+import FillDefinition = formattingSettings.ColorPicker
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
-import "./../style/visual.less";
 
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
+
+import "./../style/visual.less";
+import { FormattingService } from './formattingService';
 import { VisualSettings } from './settings';
 import { QuadChart } from './components/QuadChart';
+import { dataViewObjects } from 'powerbi-visuals-utils-dataviewutils';
 
 
 export class Visual implements IVisual {
     private target: HTMLElement;
     private svg: d3.Selection<SVGElement, unknown, HTMLElement, any>;
     private quadChart: QuadChart;
+    private formattingService: FormattingService;
     private settings: VisualSettings;
 
     constructor(options: VisualConstructorOptions) {
+        this.formattingService = new FormattingService();
         this.target = options.element;
         this.svg = d3.select(this.target)
             .append('svg')
@@ -36,7 +48,27 @@ export class Visual implements IVisual {
             return value;
         }
         return '0'; // Default to '0' as a string if the value is not a string or number
-    }    
+    }
+    
+    private getConditionalFormattingColor(
+        objectName: string,
+        propertyName: string,
+        roleName: string,
+        defaultColor: string,
+        dataView: powerbi.DataView
+    ): string {
+        const objects = dataView?.metadata?.objects;
+        if (objects) {
+            const colorProperty = dataViewObjects.getValue<string>( //DataViewObjects.getValue<string>(
+                objects, 
+                { objectName, propertyName }, 
+                defaultColor
+            );
+            return colorProperty || defaultColor;
+        }
+        return defaultColor;
+    }
+    
 
     public update(options: VisualUpdateOptions) {
         this.settings = Visual.parseSettings(options.dataViews && options.dataViews[0]);
@@ -105,7 +137,11 @@ export class Visual implements IVisual {
         return VisualSettings.parse<VisualSettings>(dataView);
     }
 
-    public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
-        return VisualSettings.enumerateObjectInstances(this.settings || new VisualSettings(), options);
+   //(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstanceEnumeration {
+   //     return VisualSettings.enumerateObjectInstances(this.settings || new VisualSettings(), options);
+   // }
+
+    public getFormattingModel(): powerbi.visuals.FormattingModel {
+        return this.formattingService.getFormattingModel(this.settings);
     }
 }
