@@ -8,18 +8,28 @@ export class Label {
         this.container = container;
     }
 
-    public drawLabel(x: number, y: number, text: string, position: string, font: string, fontSize: number, fontColor: string): void {
+    public drawLabel(
+        x: number, 
+        y: number, 
+        text: string, 
+        position: string, 
+        font: string, 
+        fontSize: number, 
+        fontColor: string, 
+        shapeSize: number
+    ): void {
         let labelX = x;
-        let labelY = position === 'above' ? y - 35 : y;
-
+        let labelY = position === 'above' ? y - (shapeSize / 2) - fontSize : y;  // Adjust labelY dynamically
+        
         this.container.append('text')
             .attr('x', labelX)
             .attr('y', labelY)
             .attr('text-anchor', 'middle')
             .attr('dominant-baseline', position === 'centered' ? 'middle' : 'bottom')
-            .attr('font-family', font)       // Use the font setting from the user
-            .attr('font-size', `${fontSize}px`) // Use the font size setting from the user
-            .attr('fill', fontColor)          // Use the font color setting from the user
+            .attr('font-family', font)
+            .attr('font-size', `${fontSize}px`)
+            .attr('fill', fontColor)
             .text(text);
     }
+    
 }
