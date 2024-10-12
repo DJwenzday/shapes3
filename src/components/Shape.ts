@@ -18,8 +18,8 @@ export class Shape {
         const shapeType = shapeData.type || 'circle';
         const color = shapeData.color || 'blue';  // Use the color from measureSettings
         const stroke = shapeData.stroke || 'black';  // Use stroke color from measureSettings
-        const strokeWidth = shapeData.strokeWidth || 2; // Use stroke width from shapeSettings
-        
+        const shapeStroke = shapeData.shapeStroke || 2;  // Apply dynamic stroke width from settings
+    
         const shapeSize = Math.min(containerWidth, containerHeight) * 0.2;  // Dynamic shape size
     
         let shapeElement;
@@ -31,7 +31,7 @@ export class Shape {
                     .attr('r', shapeSize / 2)
                     .attr('fill', color)  // Apply the correct fill color
                     .attr('stroke', stroke)  // Apply the correct stroke color
-                    .attr('stroke-width', strokeWidth);  // Apply stroke width
+                    .attr('stroke-width', shapeStroke);  // Apply stroke width
                 break;
             case 'square':
                 shapeElement = this.container.append('rect')
@@ -41,19 +41,19 @@ export class Shape {
                     .attr('height', shapeSize)
                     .attr('fill', color)
                     .attr('stroke', stroke)
-                    .attr('stroke-width', strokeWidth);
+                    .attr('stroke-width', shapeStroke);  // Apply stroke width
                 break;
             case 'triangle':
                 shapeElement = this.container.append('polygon')
                     .attr('points', `${x},${y - shapeSize / 2} ${x - shapeSize / 2},${y + shapeSize / 2} ${x + shapeSize / 2},${y + shapeSize / 2}`)
                     .attr('fill', color)
                     .attr('stroke', stroke)
-                    .attr('stroke-width', strokeWidth);
+                    .attr('stroke-width', shapeStroke);  // Apply stroke width
                 break;
             default:
                 console.error('Invalid shape type:', shapeType);
                 break;
         }
         return shapeElement;
-    }  
+    }    
 }

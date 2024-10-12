@@ -23,7 +23,7 @@ export class ShapeSettings {
     public labelPosition: string = "centered";
     public font: string = "Segoe UI";
     public fontSize: number = 12;
-    public show: boolean = true; // Toggle for showing labels
+    public show: boolean = true; // Labels are shown by default
 }
 
 export class MeasureSettings {

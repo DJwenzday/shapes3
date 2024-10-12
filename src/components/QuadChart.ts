@@ -1,4 +1,4 @@
-//QuadChart.ts
+// QuadChart.ts
 import * as d3 from 'd3';
 import { Separators } from './Separators';
 import { Shape } from './Shape';
@@ -20,7 +20,7 @@ export class QuadChart {
         this.labelDrawer = new Label(container);
         this.tooltipService = new TooltipService();
     }
-    
+
     public drawChart(
         width: number,
         height: number,
@@ -32,22 +32,64 @@ export class QuadChart {
     ): void {
         // Clear existing content
         this.container.selectAll('*').remove();
-    
+
         // Draw separators conditionally
         if (separatorSettings.show) {
             this.separators.drawVerticalLine(width / 2, height, separatorSettings);
             this.separators.drawHorizontalLine(height / 2, width, separatorSettings);
         }
-    
+
+        // Dynamic shape size, e.g., 20% of the chart's width or height
         const shapeSize = Math.min(width, height) * 0.2;
-    
-        // Draw shapes with labels for all quadrants
-        this.drawShapeWithLabel(width / 4, height / 4, shapeSettings, 'Top-Left Quadrant', measureTitles[0], measureSettingsArray[0], width, height, shapeSize);
-        this.drawShapeWithLabel((3 * width) / 4, height / 4, shapeSettings, 'Top-Right Quadrant', measureTitles[1], measureSettingsArray[1], width, height, shapeSize);
-        this.drawShapeWithLabel(width / 4, (3 * height) / 4, shapeSettings, 'Bottom-Left Quadrant', measureTitles[2], measureSettingsArray[2], width, height, shapeSize);
-        this.drawShapeWithLabel((3 * width) / 4, (3 * height) / 4, shapeSettings, 'Bottom-Right Quadrant', measureTitles[3], measureSettingsArray[3], width, height, shapeSize);
+
+        // Draw shapes and labels conditionally
+        this.drawShapesAndLabels(width, height, shapeSettings, measureTitles, measureSettingsArray, shapeSize);
     }
-    
+
+    private drawShapesAndLabels(
+        width: number,
+        height: number,
+        shapeSettings: any,
+        measureTitles: string[],
+        measureSettingsArray: any[],
+        shapeSize: number
+    ) {
+        // Only draw if labels are enabled in settings
+        if (shapeSettings.show) {
+            // Top-left quadrant
+            this.drawShapeWithLabel(
+                width / 4, height / 4,
+                shapeSettings, 'Top-Left Quadrant',
+                measureTitles[0], measureSettingsArray[0], 
+                width, height, shapeSize
+            );
+
+            // Top-right quadrant
+            this.drawShapeWithLabel(
+                (3 * width) / 4, height / 4,
+                shapeSettings, 'Top-Right Quadrant',
+                measureTitles[1], measureSettingsArray[1], 
+                width, height, shapeSize
+            );
+
+            // Bottom-left quadrant
+            this.drawShapeWithLabel(
+                width / 4, (3 * height) / 4,
+                shapeSettings, 'Bottom-Left Quadrant',
+                measureTitles[2], measureSettingsArray[2], 
+                width, height, shapeSize
+            );
+
+            // Bottom-right quadrant
+            this.drawShapeWithLabel(
+                (3 * width) / 4, (3 * height) / 4,
+                shapeSettings, 'Bottom-Right Quadrant',
+                measureTitles[3], measureSettingsArray[3], 
+                width, height, shapeSize
+            );
+        }
+    }
+
     private drawShapeWithLabel(
         x: number, 
         y: number, 
@@ -59,33 +101,35 @@ export class QuadChart {
         containerHeight: number, 
         shapeSize: number
     ): void {
-        // Draw shape
+        // Correctly pass measureSettings to ensure color and stroke are used
         const shapeElement = this.shapeDrawer.drawShape(
             x, 
             y, 
-            { ...shapeSettings, color: measureSettings.shapeFillColor, stroke: measureSettings.shapeStrokeColor }, 
+            { 
+                ...shapeSettings, 
+                color: measureSettings.shapeFillColor, 
+                stroke: measureSettings.shapeStrokeColor, 
+                strokeWidth: shapeSettings.strokeWidth // Dynamic stroke width
+            }, 
             containerWidth, 
             containerHeight
         );
-        
-        // Draw the label based on the show toggle for labels
-        if (shapeSettings.show) {
-            this.labelDrawer.drawLabel(
-                x,
-                y,
-                labelText,
-                shapeSettings.labelPosition,
-                shapeSettings.font,
-                shapeSettings.fontSize,
-                measureSettings.labelFontColor, // Ensure label font color from measureSettings
-                shapeSize
-            );
-        }
-    
-        // Tooltip logic
+
+        // Draw the label with correct settings
+        this.labelDrawer.drawLabel(
+            x,
+            y,
+            labelText,
+            shapeSettings.labelPosition,
+            shapeSettings.font,
+            shapeSettings.fontSize,
+            measureSettings.labelFontColor, // Label font color from settings
+            shapeSize
+        );
+
+        // Apply tooltips on hover
         shapeElement
             .on('mouseover', (event: MouseEvent) => this.tooltipService.showTooltip(tooltipText, event))
             .on('mouseout', () => this.tooltipService.hideTooltip());
     }
-         
 }
