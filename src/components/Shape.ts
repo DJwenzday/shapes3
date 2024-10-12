@@ -8,31 +8,42 @@ export class Shape {
         this.container = container;
     }
 
-    public drawShape(x: number, y: number, shapeData: any): d3.Selection<SVGElement, unknown, HTMLElement, any> {
+    public drawShape(x: number, y: number, shapeData: any, containerWidth: number, containerHeight: number): d3.Selection<SVGElement, unknown, HTMLElement, any> {
         const shapeType = shapeData.type || 'circle';
         const color = shapeData.color || 'blue';
-
+        const strokeColor = shapeData.strokeColor || 'black';  // Handle dynamic stroke color
+        const strokeWidth = shapeData.strokeWidth || 2;  // Handle dynamic stroke width
+        
+        // Adjust the size dynamically based on the container's width and height
+        const shapeSize = Math.min(containerWidth, containerHeight) * 0.2; // Adjust size proportionally
+        
         let shapeElement;
         switch (shapeType) {
             case 'circle':
                 shapeElement = this.container.append('circle')
                     .attr('cx', x)
                     .attr('cy', y)
-                    .attr('r', 30)  // Fixed size for circle
-                    .attr('fill', color);
+                    .attr('r', shapeSize / 2)  // Adjust radius
+                    .attr('fill', color)
+                    .attr('stroke', strokeColor)  // Apply stroke color dynamically
+                    .attr('stroke-width', strokeWidth);  // Apply dynamic stroke width
                 break;
             case 'square':
                 shapeElement = this.container.append('rect')
-                    .attr('x', x - 25)
-                    .attr('y', y - 25)
-                    .attr('width', 50)  // Fixed width and height for square
-                    .attr('height', 50)
-                    .attr('fill', color);
+                    .attr('x', x - shapeSize / 2)
+                    .attr('y', y - shapeSize / 2)
+                    .attr('width', shapeSize)
+                    .attr('height', shapeSize)
+                    .attr('fill', color)
+                    .attr('stroke', strokeColor)  // Apply stroke color dynamically
+                    .attr('stroke-width', strokeWidth);  // Apply dynamic stroke width
                 break;
             case 'triangle':
                 shapeElement = this.container.append('polygon')
-                    .attr('points', `${x},${y - 30} ${x - 26},${y + 15} ${x + 26},${y + 15}`)
-                    .attr('fill', color);
+                    .attr('points', `${x},${y - shapeSize / 2} ${x - shapeSize / 2},${y + shapeSize / 2} ${x + shapeSize / 2},${y + shapeSize / 2}`)
+                    .attr('fill', color)
+                    .attr('stroke', strokeColor)  // Apply stroke color dynamically
+                    .attr('stroke-width', strokeWidth);  // Apply dynamic stroke width
                 break;
             default:
                 console.error('Invalid shape type:', shapeType);
@@ -40,4 +51,6 @@ export class Shape {
         }
         return shapeElement;
     }
+    
+    
 }

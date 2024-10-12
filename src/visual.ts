@@ -77,7 +77,6 @@ export class Visual implements IVisual {
         const height = options.viewport.height;
         const dataView = options.dataViews && options.dataViews[0];
     
-        // Get measure values and titles for each shape
         const { values: measureValues, titles: measureTitles } = this.getMeasureValuesAndTitles(dataView);
     
         // Define the measure settings for each quadrant
@@ -90,11 +89,11 @@ export class Visual implements IVisual {
     
         const separatorSettings = this.settings.separatorSettings;
         const shapeSettings = {
-            color: this.settings.shapeSettings.shapeColor,
             type: this.settings.shapeSettings.shapeType,
             labelPosition: this.settings.shapeSettings.labelPosition,
             font: this.settings.shapeSettings.font,
-            fontSize: this.settings.shapeSettings.fontSize
+            fontSize: this.settings.shapeSettings.fontSize,
+            strokeWidth: 2  // Default stroke width, or pass dynamically
         };
     
         // Pass measure values, titles, and settings to the Quad Chart
@@ -107,7 +106,8 @@ export class Visual implements IVisual {
             measureTitles,
             measureSettingsArray
         );
-    }    
+    }
+        
     
     
     private getMeasureValuesAndTitles(dataView: DataView): { values: (string | number)[], titles: string[] } {

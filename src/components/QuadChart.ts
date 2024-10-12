@@ -37,28 +37,32 @@ export class QuadChart {
         this.separators.drawVerticalLine(width / 2, height, separatorSettings);
         this.separators.drawHorizontalLine(height / 2, width, separatorSettings);
     
-        // Draw shapes with labels using measure titles and individual settings
-        this.drawShapeWithLabel(width / 4, height / 4, shapeSettings, 'Top-Left Quadrant', measureTitles[0], measureSettingsArray[0]);
-        this.drawShapeWithLabel((3 * width) / 4, height / 4, shapeSettings, 'Top-Right Quadrant', measureTitles[1], measureSettingsArray[1]);
-        this.drawShapeWithLabel(width / 4, (3 * height) / 4, shapeSettings, 'Bottom-Left Quadrant', measureTitles[2], measureSettingsArray[2]);
-        this.drawShapeWithLabel((3 * width) / 4, (3 * height) / 4, shapeSettings, 'Bottom-Right Quadrant', measureTitles[3], measureSettingsArray[3]);
-    } 
+        // Draw shapes with labels, passing the current container width and height
+        this.drawShapeWithLabel(width / 4, height / 4, shapeSettings, 'Top-Left Quadrant', measureTitles[0], measureSettingsArray[0], width, height);
+        this.drawShapeWithLabel((3 * width) / 4, height / 4, shapeSettings, 'Top-Right Quadrant', measureTitles[1], measureSettingsArray[1], width, height);
+        this.drawShapeWithLabel(width / 4, (3 * height) / 4, shapeSettings, 'Bottom-Left Quadrant', measureTitles[2], measureSettingsArray[2], width, height);
+        this.drawShapeWithLabel((3 * width) / 4, (3 * height) / 4, shapeSettings, 'Bottom-Right Quadrant', measureTitles[3], measureSettingsArray[3], width, height);
+    }
+     
 
     private drawShapeWithLabel(
-        x: number, 
-        y: number, 
-        shapeSettings: any, 
-        tooltipText: string, 
-        labelText: string, 
-        measureSettings: any
+        x: number,
+        y: number,
+        shapeSettings: any,
+        tooltipText: string,
+        labelText: string,
+        measureSettings: any,  // contains color and formatting for the specific measure
+        containerWidth: number,
+        containerHeight: number
     ): void {
-        const shapeElement = this.shapeDrawer.drawShape(x, y, shapeSettings);
-    
-        // Use the specific settings for each measure to set shape fill, stroke, and label font color
-        shapeElement.attr('fill', measureSettings.shapeFillColor || shapeSettings.color);
-        shapeElement.attr('stroke', measureSettings.shapeStrokeColor || 'black');
-    
-        // Draw the label with the measure-specific font color
+        const shapeElement = this.shapeDrawer.drawShape(x, y, {
+            type: shapeSettings.type,
+            color: measureSettings.shapeFillColor, // Dynamically set fill color
+            strokeColor: measureSettings.shapeStrokeColor, // Dynamically set stroke color
+            strokeWidth: shapeSettings.strokeWidth // Set stroke width if available
+        }, containerWidth, containerHeight); // Pass the container size
+        
+        // Draw the label with the dynamic settings
         this.labelDrawer.drawLabel(
             x,
             y,
@@ -66,14 +70,13 @@ export class QuadChart {
             shapeSettings.labelPosition,
             shapeSettings.font,
             shapeSettings.fontSize,
-            measureSettings.labelFontColor // Use the measure-specific label font color
+            measureSettings.labelFontColor // Use dynamic font color for the measure
         );
-    
-        // Add tooltip functionality
+        
+        // Apply tooltip functionality
         shapeElement
             .on('mouseover', (event: MouseEvent) => this.tooltipService.showTooltip(tooltipText, event))
             .on('mouseout', () => this.tooltipService.hideTooltip());
-    }
-              
+    }                
     
 }
