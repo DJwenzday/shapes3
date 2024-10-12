@@ -77,7 +77,16 @@ export class Visual implements IVisual {
         const height = options.viewport.height;
         const dataView = options.dataViews && options.dataViews[0];
     
+        // Get measure values and titles for each shape
         const { values: measureValues, titles: measureTitles } = this.getMeasureValuesAndTitles(dataView);
+    
+        // Define the measure settings for each quadrant
+        const measureSettingsArray = [
+            this.settings.measure1Settings,
+            this.settings.measure2Settings,
+            this.settings.measure3Settings,
+            this.settings.measure4Settings
+        ];
     
         const separatorSettings = this.settings.separatorSettings;
         const shapeSettings = {
@@ -88,7 +97,7 @@ export class Visual implements IVisual {
             fontSize: this.settings.shapeSettings.fontSize
         };
     
-        // Draw the Quad Chart with the updated settings, passing individual measure settings for each label
+        // Pass measure values, titles, and settings to the Quad Chart
         this.quadChart.drawChart(
             width,
             height,
@@ -96,14 +105,9 @@ export class Visual implements IVisual {
             shapeSettings,
             measureValues,
             measureTitles,
-            [
-                this.settings.measure1Settings,
-                this.settings.measure2Settings,
-                this.settings.measure3Settings,
-                this.settings.measure4Settings
-            ]
+            measureSettingsArray
         );
-    }
+    }    
     
     
     private getMeasureValuesAndTitles(dataView: DataView): { values: (string | number)[], titles: string[] } {
@@ -141,7 +145,8 @@ export class Visual implements IVisual {
    //     return VisualSettings.enumerateObjectInstances(this.settings || new VisualSettings(), options);
    // }
 
-    public getFormattingModel(): powerbi.visuals.FormattingModel {
-        return this.formattingService.getFormattingModel(this.settings);
+   public getFormattingModel(): powerbi.visuals.FormattingModel {
+    return this.formattingService.getFormattingModel(this.settings);
     }
+
 }

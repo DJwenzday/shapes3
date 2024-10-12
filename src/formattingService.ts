@@ -14,7 +14,7 @@ export class FormattingService {
                 this.createSeparatorFormattingCard(settings)
             ]
         };
-    }
+    }    
 
     private createShapeFormattingCard(settings: VisualSettings): powerbi.visuals.FormattingCard {
         return {
@@ -36,11 +36,11 @@ export class FormattingService {
 
     private createMeasureFormattingCard(displayName: string, measureSettings: any, objectName: string): powerbi.visuals.FormattingCard {
         return {
-            uid: `${objectName}Card_uid`,
+            uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Card_uid`,
             displayName: displayName,
             groups: [
                 {
-                    uid: `${objectName}Group_uid`,
+                    uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Group_uid`,
                     displayName: `${displayName} Colors`,
                     slices: [
                         this.createColorPickerSlice(objectName, "shapeFillColor", "Shape Fill", measureSettings.shapeFillColor),
@@ -51,6 +51,7 @@ export class FormattingService {
             ]
         };
     }
+        
 
     private createSeparatorFormattingCard(settings: VisualSettings): powerbi.visuals.FormattingCard {
         return {

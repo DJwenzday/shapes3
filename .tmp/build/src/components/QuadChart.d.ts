@@ -6,7 +6,6 @@ export declare class QuadChart {
     private labelDrawer;
     private tooltipService;
     constructor(container: d3.Selection<SVGElement, unknown, HTMLElement, any>);
-    drawChart(width: number, height: number, separatorSettings: any, shapeSettings: any, measureValues: (string | number)[], // Allow both strings and numbers
-    measureTitles: string[], measureSettingsArray: any[]): void;
+    drawChart(width: number, height: number, separatorSettings: any, shapeSettings: any, measureValues: (string | number)[], measureTitles: string[], measureSettingsArray: any[]): void;
     private drawShapeWithLabel;
 }

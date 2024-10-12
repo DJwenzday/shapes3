@@ -22,12 +22,12 @@ export class QuadChart {
     }
 
     public drawChart(
-        width: number, 
-        height: number, 
-        separatorSettings: any, 
-        shapeSettings: any, 
-        measureValues: (string | number)[],  // Allow both strings and numbers
-        measureTitles: string[], 
+        width: number,
+        height: number,
+        separatorSettings: any,
+        shapeSettings: any,
+        measureValues: (string | number)[],
+        measureTitles: string[],
         measureSettingsArray: any[]
     ): void {
         // Clear existing content
@@ -37,18 +37,28 @@ export class QuadChart {
         this.separators.drawVerticalLine(width / 2, height, separatorSettings);
         this.separators.drawHorizontalLine(height / 2, width, separatorSettings);
     
-        // Draw shapes with labels using measure titles and settings
+        // Draw shapes with labels using measure titles and individual settings
         this.drawShapeWithLabel(width / 4, height / 4, shapeSettings, 'Top-Left Quadrant', measureTitles[0], measureSettingsArray[0]);
         this.drawShapeWithLabel((3 * width) / 4, height / 4, shapeSettings, 'Top-Right Quadrant', measureTitles[1], measureSettingsArray[1]);
         this.drawShapeWithLabel(width / 4, (3 * height) / 4, shapeSettings, 'Bottom-Left Quadrant', measureTitles[2], measureSettingsArray[2]);
         this.drawShapeWithLabel((3 * width) / 4, (3 * height) / 4, shapeSettings, 'Bottom-Right Quadrant', measureTitles[3], measureSettingsArray[3]);
+    } 
 
-    }    
-
-    private drawShapeWithLabel(x: number, y: number, shapeSettings: any, tooltipText: string, labelText: string, measureSettings: any): void {
+    private drawShapeWithLabel(
+        x: number, 
+        y: number, 
+        shapeSettings: any, 
+        tooltipText: string, 
+        labelText: string, 
+        measureSettings: any
+    ): void {
         const shapeElement = this.shapeDrawer.drawShape(x, y, shapeSettings);
     
-        // Draw the label based on the shape's position and individual measure settings
+        // Use the specific settings for each measure to set shape fill, stroke, and label font color
+        shapeElement.attr('fill', measureSettings.shapeFillColor || shapeSettings.color);
+        shapeElement.attr('stroke', measureSettings.shapeStrokeColor || 'black');
+    
+        // Draw the label with the measure-specific font color
         this.labelDrawer.drawLabel(
             x,
             y,
@@ -56,13 +66,14 @@ export class QuadChart {
             shapeSettings.labelPosition,
             shapeSettings.font,
             shapeSettings.fontSize,
-            measureSettings.labelFontColor // Use the specific label font color for the measure
+            measureSettings.labelFontColor // Use the measure-specific label font color
         );
     
-        // Apply tooltip functionality
+        // Add tooltip functionality
         shapeElement
             .on('mouseover', (event: MouseEvent) => this.tooltipService.showTooltip(tooltipText, event))
             .on('mouseout', () => this.tooltipService.hideTooltip());
-    }       
+    }
+              
     
 }
