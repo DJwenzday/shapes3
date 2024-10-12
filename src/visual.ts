@@ -79,7 +79,6 @@ export class Visual implements IVisual {
     
         const { values: measureValues, titles: measureTitles } = this.getMeasureValuesAndTitles(dataView);
     
-        // Define the measure settings for each quadrant
         const measureSettingsArray = [
             this.settings.measure1Settings,
             this.settings.measure2Settings,
@@ -93,10 +92,10 @@ export class Visual implements IVisual {
             labelPosition: this.settings.shapeSettings.labelPosition,
             font: this.settings.shapeSettings.font,
             fontSize: this.settings.shapeSettings.fontSize,
-            strokeWidth: 2  // Default stroke width, or pass dynamically
+            shapeStroke: this.settings.shapeSettings.shapeStroke,
+            show: this.settings.shapeSettings.show  // Ensure that the show setting is passed to the QuadChart
         };
     
-        // Pass measure values, titles, and settings to the Quad Chart
         this.quadChart.drawChart(
             width,
             height,
@@ -107,8 +106,8 @@ export class Visual implements IVisual {
             measureSettingsArray
         );
     }
-        
     
+        
     
     private getMeasureValuesAndTitles(dataView: DataView): { values: (string | number)[], titles: string[] } {
         const valuesArray = dataView?.categorical?.values;
@@ -131,8 +130,7 @@ export class Visual implements IVisual {
         }
         return { values: [0, 0, 0, 0], titles: ['Shape 1', 'Shape 2', 'Shape 3', 'Shape 4'] };
     }
-    
-    
+     
     private toNumber(value: PrimitiveValue): number {
         return typeof value === 'number' ? value : isNaN(Number(value)) ? 0 : Number(value);
     }    
@@ -148,5 +146,4 @@ export class Visual implements IVisual {
    public getFormattingModel(): powerbi.visuals.FormattingModel {
     return this.formattingService.getFormattingModel(this.settings);
     }
-
 }

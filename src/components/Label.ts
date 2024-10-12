@@ -20,7 +20,7 @@ export class Label {
     ): void {
         let labelX = x;
         let labelY = position === 'above' ? y - (shapeSize / 2) - fontSize : y;  // Adjust labelY dynamically
-        
+
         this.container.append('text')
             .attr('x', labelX)
             .attr('y', labelY)
@@ -31,5 +31,4 @@ export class Label {
             .attr('fill', fontColor)
             .text(text);
     }
-    
 }

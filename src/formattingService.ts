@@ -1,4 +1,5 @@
 //formattingService.ts
+
 import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import { VisualSettings } from './settings';
 
@@ -26,13 +27,15 @@ export class FormattingService {
                     displayName: "General Settings",
                     slices: [
                         this.createDropdownSlice("Shape Type", "shapeSettings", "shapeType", settings.shapeSettings.shapeType),
+                        this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.shapeStroke), // Stroke size
                         this.createDropdownSlice("Label Position", "shapeSettings", "labelPosition", settings.shapeSettings.labelPosition),
-                        this.createFontControlSlice(settings)
+                        this.createFontControlSlice(settings),
+                        this.createToggleSlice("Show Labels", "shapeSettings", "show", settings.shapeSettings.show) // Toggle for labels
                     ]
                 }
             ]
         };
-    }
+    }    
 
     private createMeasureFormattingCard(displayName: string, measureSettings: any, objectName: string): powerbi.visuals.FormattingCard {
         return {
@@ -51,7 +54,6 @@ export class FormattingService {
             ]
         };
     }
-        
 
     private createSeparatorFormattingCard(settings: VisualSettings): powerbi.visuals.FormattingCard {
         return {
@@ -63,11 +65,29 @@ export class FormattingService {
                     displayName: undefined,
                     slices: [
                         this.createColorPickerSlice("separatorSettings", "color", "Separator Color", settings.separatorSettings.color),
-                        this.createNumberInputSlice("separatorSettings", "width", "Separator Width", settings.separatorSettings.width)
+                        this.createNumberInputSlice("Separator Width", "separatorSettings", "width", settings.separatorSettings.width),
+                        this.createToggleSlice("Show Separator", "separatorSettings", "show", settings.separatorSettings.show)
                     ]
                 }
             ]
         };
+    }
+
+    private createToggleSlice(displayName: string, objectName: string, propertyName: string, value: boolean): powerbi.visuals.FormattingSlice {
+        return {
+            uid: `${propertyName}_uid`,
+            displayName: displayName,
+            control: {
+                type: powerbi.visuals.FormattingComponent.ToggleSwitch,
+                properties: {
+                    descriptor: {
+                        objectName: objectName,
+                        propertyName: propertyName
+                    },
+                    value: value
+                }
+            }
+        }
     }
 
     private createDropdownSlice(displayName: string, objectName: string, propertyName: string, value: any): powerbi.visuals.FormattingSlice {
@@ -76,6 +96,23 @@ export class FormattingService {
             displayName: displayName,
             control: {
                 type: powerbi.visuals.FormattingComponent.Dropdown,
+                properties: {
+                    descriptor: {
+                        objectName: objectName,
+                        propertyName: propertyName
+                    },
+                    value: value
+                }
+            }
+        };
+    }
+
+    private createNumberInputSlice(displayName: string, objectName: string, propertyName: string, value: number): powerbi.visuals.FormattingSlice {
+        return {
+            uid: `${propertyName}_uid`,
+            displayName: displayName,
+            control: {
+                type: powerbi.visuals.FormattingComponent.NumUpDown,
                 properties: {
                     descriptor: {
                         objectName: objectName,
@@ -126,23 +163,6 @@ export class FormattingService {
                         instanceKind: powerbi.VisualEnumerationInstanceKinds.ConstantOrRule
                     },
                     value: { value: colorValue }
-                }
-            }
-        };
-    }
-
-    private createNumberInputSlice(objectName: string, propertyName: string, displayName: string, value: number): powerbi.visuals.FormattingSlice {
-        return {
-            uid: `${propertyName}_uid`,
-            displayName: displayName,
-            control: {
-                type: powerbi.visuals.FormattingComponent.NumUpDown,
-                properties: {
-                    descriptor: {
-                        objectName: objectName,
-                        propertyName: propertyName
-                    },
-                    value: value
                 }
             }
         };

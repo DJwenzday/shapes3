@@ -20,7 +20,7 @@ export class QuadChart {
         this.labelDrawer = new Label(container);
         this.tooltipService = new TooltipService();
     }
-
+    
     public drawChart(
         width: number,
         height: number,
@@ -33,34 +33,21 @@ export class QuadChart {
         // Clear existing content
         this.container.selectAll('*').remove();
     
-        // Calculate dynamic shape size based on container size
-        const shapeSize = Math.min(width, height) * 0.2; // Set shape size to 20% of the smallest dimension
+        // Draw separators conditionally
+        if (separatorSettings.show) {
+            this.separators.drawVerticalLine(width / 2, height, separatorSettings);
+            this.separators.drawHorizontalLine(height / 2, width, separatorSettings);
+        }
     
-        // Draw separators
-        this.separators.drawVerticalLine(width / 2, height, separatorSettings);
-        this.separators.drawHorizontalLine(height / 2, width, separatorSettings);
+        const shapeSize = Math.min(width, height) * 0.2;
     
-        // Ensure dynamic colors for each shape are passed along with the rest of the settings
-        this.drawShapeWithLabel(
-            width / 4, height / 4, shapeSettings, 'Top-Left Quadrant', 
-            measureTitles[0], measureSettingsArray[0], width, height, shapeSize
-        );
-        this.drawShapeWithLabel(
-            (3 * width) / 4, height / 4, shapeSettings, 'Top-Right Quadrant', 
-            measureTitles[1], measureSettingsArray[1], width, height, shapeSize
-        );
-        this.drawShapeWithLabel(
-            width / 4, (3 * height) / 4, shapeSettings, 'Bottom-Left Quadrant', 
-            measureTitles[2], measureSettingsArray[2], width, height, shapeSize
-        );
-        this.drawShapeWithLabel(
-            (3 * width) / 4, (3 * height) / 4, shapeSettings, 'Bottom-Right Quadrant', 
-            measureTitles[3], measureSettingsArray[3], width, height, shapeSize
-        );
+        // Draw shapes with labels for all quadrants
+        this.drawShapeWithLabel(width / 4, height / 4, shapeSettings, 'Top-Left Quadrant', measureTitles[0], measureSettingsArray[0], width, height, shapeSize);
+        this.drawShapeWithLabel((3 * width) / 4, height / 4, shapeSettings, 'Top-Right Quadrant', measureTitles[1], measureSettingsArray[1], width, height, shapeSize);
+        this.drawShapeWithLabel(width / 4, (3 * height) / 4, shapeSettings, 'Bottom-Left Quadrant', measureTitles[2], measureSettingsArray[2], width, height, shapeSize);
+        this.drawShapeWithLabel((3 * width) / 4, (3 * height) / 4, shapeSettings, 'Bottom-Right Quadrant', measureTitles[3], measureSettingsArray[3], width, height, shapeSize);
     }
     
-     
-
     private drawShapeWithLabel(
         x: number, 
         y: number, 
@@ -72,7 +59,7 @@ export class QuadChart {
         containerHeight: number, 
         shapeSize: number
     ): void {
-        // Correctly pass measureSettings to ensure color properties are used
+        // Draw shape
         const shapeElement = this.shapeDrawer.drawShape(
             x, 
             y, 
@@ -80,23 +67,25 @@ export class QuadChart {
             containerWidth, 
             containerHeight
         );
-    
-        // Draw the label using the appropriate measure settings
-        this.labelDrawer.drawLabel(
-            x,
-            y,
-            labelText,
-            shapeSettings.labelPosition,
-            shapeSettings.font,
-            shapeSettings.fontSize,
-            measureSettings.labelFontColor, // Ensure label font color from measureSettings
-            shapeSize
-        );
+        
+        // Draw the label based on the show toggle for labels
+        if (shapeSettings.show) {
+            this.labelDrawer.drawLabel(
+                x,
+                y,
+                labelText,
+                shapeSettings.labelPosition,
+                shapeSettings.font,
+                shapeSettings.fontSize,
+                measureSettings.labelFontColor, // Ensure label font color from measureSettings
+                shapeSize
+            );
+        }
     
         // Tooltip logic
         shapeElement
             .on('mouseover', (event: MouseEvent) => this.tooltipService.showTooltip(tooltipText, event))
             .on('mouseout', () => this.tooltipService.hideTooltip());
-    }    
-    
+    }
+         
 }

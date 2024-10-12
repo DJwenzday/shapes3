@@ -56,6 +56,12 @@
                 "width": {
                     "displayName": "Width",
                     "type": { "numeric": true }
+                },
+                "show": {
+                    "displayName": "Show Separator",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         },
@@ -70,6 +76,12 @@
                             { "value": "square", "displayName": "Square" },
                             { "value": "triangle", "displayName": "Triangle" }
                         ]
+                    }
+                },
+                "shapeStroke": {
+                    "displayName": "Shape Stroke",
+                    "type": {
+                        "numeric": true
                     }
                 },
                 "labelPosition": {
@@ -92,6 +104,12 @@
                 "fontSize": {
                     "displayName": "Font Size",
                     "type": { "numeric": true }
+                },
+                "show": {
+                    "displayName": "Show Labels",
+                    "type": {
+                        "bool": true
+                    }
                 }
             }
         },

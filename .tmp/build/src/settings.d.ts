@@ -11,13 +11,15 @@ export declare class VisualSettings extends DataViewObjectsParser {
 export declare class SeparatorSettings {
     color: string;
     width: number;
+    show: boolean;
 }
 export declare class ShapeSettings {
-    shapeColor: string;
     shapeType: string;
+    shapeStroke: number;
     labelPosition: string;
     font: string;
     fontSize: number;
+    show: boolean;
 }
 export declare class MeasureSettings {
     shapeFillColor: string;

@@ -4,8 +4,9 @@ export declare class FormattingService {
     private createShapeFormattingCard;
     private createMeasureFormattingCard;
     private createSeparatorFormattingCard;
+    private createToggleSlice;
     private createDropdownSlice;
+    private createNumberInputSlice;
     private createFontControlSlice;
     private createColorPickerSlice;
-    private createNumberInputSlice;
 }
