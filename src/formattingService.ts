@@ -8,10 +8,6 @@ export class FormattingService {
         return {
             cards: [
                 this.createShapeFormattingCard(settings),
-                //this.createMeasureFormattingCard("Measure 1", settings.measure1Settings, "measure1Settings"),
-                //this.createMeasureFormattingCard("Measure 2", settings.measure2Settings, "measure2Settings"),
-                //this.createMeasureFormattingCard("Measure 3", settings.measure3Settings, "measure3Settings"),
-                //this.createMeasureFormattingCard("Measure 4", settings.measure4Settings, "measure4Settings"),
                 this.createSeparatorFormattingCard(settings)
             ]
         };
@@ -31,42 +27,30 @@ export class FormattingService {
         };
     }
 
-    private createGeneralSettingsGroup(settings: VisualSettings): powerbi.visuals.FormattingGroup { //.FormattingSlice
+    private createGeneralSettingsGroup(settings: VisualSettings): powerbi.visuals.FormattingGroup {
         return {
-           // uid: "shapeSettingsCard_uid",
-           // displayName: "Shape Settings",
-           // groups: [
-             //   {
-                    uid: "generalSettingsGroup_uid",
-                    displayName: "General Settings",
-                    slices: [
-                        this.createDropdownSlice("Shape Type", "shapeSettings", "shapeType", settings.shapeSettings.shapeType),
-                        this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.shapeStroke), // Stroke size
-                        this.createDropdownSlice("Label Position", "shapeSettings", "labelPosition", settings.shapeSettings.labelPosition),
-                        this.createFontControlSlice(settings),
-                        this.createToggleSlice("Show Labels", "shapeSettings", "show", settings.shapeSettings.show) // Toggle for labels
-                    ]
-             //   }
-            //]
+                uid: "generalSettingsGroup_uid",
+                displayName: "General Settings",
+                slices: [
+                    this.createDropdownSlice("Shape Type", "shapeSettings", "shapeType", settings.shapeSettings.shapeType), //Shape options
+                    this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.shapeStroke), // Stroke size
+                    this.createDropdownSlice("Label Position", "shapeSettings", "labelPosition", settings.shapeSettings.labelPosition), //label above or centered on shape
+                    this.createFontControlSlice(settings), //font family and size
+                    this.createToggleSlice("Show Labels", "shapeSettings", "show", settings.shapeSettings.show) // Toggle for labels
+                ]
         };
     }    
 
     private createMeasureFormattingGroup(displayName: string, measureSettings: any, objectName: string): powerbi.visuals.FormattingGroup {
         return {
-        //    uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Card_uid`,
-        //    displayName: displayName,
-        //    groups: [
-        //        {
-                    uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Group_uid`,
-                    displayName: `${displayName} Colors`,
-                    slices: [
-                        this.createColorPickerSlice(objectName, "shapeFillColor", "Shape Fill", measureSettings.shapeFillColor),
-                        this.createColorPickerSlice(objectName, "shapeStrokeColor", "Shape Stroke", measureSettings.shapeStrokeColor),
-                        this.createColorPickerSlice(objectName, "labelFontColor", "Font Color", measureSettings.labelFontColor)
-                    ]
-            //    }
-        //    ]
-        };
+                uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Group_uid`,
+                displayName: `${displayName} Colors`,
+                slices: [
+                    this.createColorPickerSlice(objectName, "shapeFillColor", "Shape Fill", measureSettings.shapeFillColor),
+                    this.createColorPickerSlice(objectName, "shapeStrokeColor", "Shape Stroke", measureSettings.shapeStrokeColor),
+                    this.createColorPickerSlice(objectName, "labelFontColor", "Font Color", measureSettings.labelFontColor)
+                ]
+            };
     }
 
     private createSeparatorFormattingCard(settings: VisualSettings): powerbi.visuals.FormattingCard {
@@ -87,6 +71,8 @@ export class FormattingService {
         };
     }
 
+    
+    // Helper methods for creating slices
     private createToggleSlice(displayName: string, objectName: string, propertyName: string, value: boolean): powerbi.visuals.FormattingSlice {
         return {
             uid: `${propertyName}_uid`,
