@@ -8,10 +8,10 @@ export class FormattingService {
         return {
             cards: [
                 this.createShapeFormattingCard(settings),
-                this.createMeasureFormattingCard("Measure 1", settings.measure1Settings, "measure1Settings"),
-                this.createMeasureFormattingCard("Measure 2", settings.measure2Settings, "measure2Settings"),
-                this.createMeasureFormattingCard("Measure 3", settings.measure3Settings, "measure3Settings"),
-                this.createMeasureFormattingCard("Measure 4", settings.measure4Settings, "measure4Settings"),
+                //this.createMeasureFormattingCard("Measure 1", settings.measure1Settings, "measure1Settings"),
+                //this.createMeasureFormattingCard("Measure 2", settings.measure2Settings, "measure2Settings"),
+                //this.createMeasureFormattingCard("Measure 3", settings.measure3Settings, "measure3Settings"),
+                //this.createMeasureFormattingCard("Measure 4", settings.measure4Settings, "measure4Settings"),
                 this.createSeparatorFormattingCard(settings)
             ]
         };
@@ -22,7 +22,21 @@ export class FormattingService {
             uid: "shapeSettingsCard_uid",
             displayName: "Shape Settings",
             groups: [
-                {
+                this.createGeneralSettingsGroup(settings),
+                this.createMeasureFormattingGroup("Measure 1 ", settings.measure1Settings, "measure1Settings"),
+                this.createMeasureFormattingGroup("Measure 2 ", settings.measure2Settings, "measure2Settings"),
+                this.createMeasureFormattingGroup("Measure 3 ", settings.measure3Settings, "measure3Settings"),
+                this.createMeasureFormattingGroup("Measure 4 ", settings.measure4Settings, "measure4Settings")
+            ]
+        };
+    }
+
+    private createGeneralSettingsGroup(settings: VisualSettings): powerbi.visuals.FormattingGroup { //.FormattingSlice
+        return {
+           // uid: "shapeSettingsCard_uid",
+           // displayName: "Shape Settings",
+           // groups: [
+             //   {
                     uid: "generalSettingsGroup_uid",
                     displayName: "General Settings",
                     slices: [
@@ -32,17 +46,17 @@ export class FormattingService {
                         this.createFontControlSlice(settings),
                         this.createToggleSlice("Show Labels", "shapeSettings", "show", settings.shapeSettings.show) // Toggle for labels
                     ]
-                }
-            ]
+             //   }
+            //]
         };
     }    
 
-    private createMeasureFormattingCard(displayName: string, measureSettings: any, objectName: string): powerbi.visuals.FormattingCard {
+    private createMeasureFormattingGroup(displayName: string, measureSettings: any, objectName: string): powerbi.visuals.FormattingGroup {
         return {
-            uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Card_uid`,
-            displayName: displayName,
-            groups: [
-                {
+        //    uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Card_uid`,
+        //    displayName: displayName,
+        //    groups: [
+        //        {
                     uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Group_uid`,
                     displayName: `${displayName} Colors`,
                     slices: [
@@ -50,8 +64,8 @@ export class FormattingService {
                         this.createColorPickerSlice(objectName, "shapeStrokeColor", "Shape Stroke", measureSettings.shapeStrokeColor),
                         this.createColorPickerSlice(objectName, "labelFontColor", "Font Color", measureSettings.labelFontColor)
                     ]
-                }
-            ]
+            //    }
+        //    ]
         };
     }
 

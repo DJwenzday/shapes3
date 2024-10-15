@@ -1,6 +1,11 @@
 {
     "dataRoles": [
         {
+            "name": "quadrantCategories",
+            "displayName": "Chart Categories",
+            "kind": "Grouping"
+        },
+        {
             "name": "shape1measure",
             "displayName": "Shape1 Measure",
             "kind": "Measure"
@@ -26,6 +31,7 @@
         {
             "conditions": [
                 {
+                    "quadrantCategories": { "max": 1},
                     "shape1measure": { "max": 1 },
                     "shape2measure": { "max": 1 },
                     "shape3measure": { "max": 1 },
@@ -33,6 +39,11 @@
                 }
             ],
             "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "quadrantCategories"
+                    }
+                },
                 "values": {
                     "select": [
                         { "bind": { "to": "shape1measure" } },
@@ -46,6 +57,15 @@
     ],
 
     "objects": {
+        "general":{
+            "properties": {
+                "filter": {
+                    "type": {
+                        "filter": {}
+                    }
+                }
+            }
+        },
         "separatorSettings": {
             "displayName": "Separator Settings",
             "properties": {
@@ -214,6 +234,9 @@
                 }
             }
         }
+    },
+    "drilldown": {
+        "roles": ["quadrantCategories"]
     },
     "privileges": []
 }

@@ -2,7 +2,8 @@ import { VisualSettings } from './settings';
 export declare class FormattingService {
     getFormattingModel(settings: VisualSettings): powerbi.visuals.FormattingModel;
     private createShapeFormattingCard;
-    private createMeasureFormattingCard;
+    private createGeneralSettingsGroup;
+    private createMeasureFormattingGroup;
     private createSeparatorFormattingCard;
     private createToggleSlice;
     private createDropdownSlice;
