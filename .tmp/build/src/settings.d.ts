@@ -7,6 +7,7 @@ export declare class VisualSettings extends DataViewObjectsParser {
     measure2Settings: MeasureSettings;
     measure3Settings: MeasureSettings;
     measure4Settings: MeasureSettings;
+    tooltipSettings: TooltipSettings;
 }
 export declare class SeparatorSettings {
     color: string;
@@ -25,4 +26,7 @@ export declare class MeasureSettings {
     shapeFillColor: string;
     shapeStrokeColor: string;
     labelFontColor: string;
+}
+export declare class TooltipSettings {
+    show: boolean;
 }

@@ -24,6 +24,11 @@
             "name": "shape4measure",
             "displayName": "Shape4 Measure",
             "kind": "Measure"
+        },
+        {
+            "name": "tooltipMeasure",
+            "displayName": "Tooltip",
+            "kind": "Measure"
         }
     ],
 
@@ -63,6 +68,14 @@
                     "type": {
                         "filter": {}
                     }
+                }
+            }
+        },
+        "tooltipSettings": {
+            "properties": {
+                "show":{
+                    "displayName": "Tooltips",
+                    "type": { "bool": true}
                 }
             }
         },
@@ -237,6 +250,14 @@
     },
     "drilldown": {
         "roles": ["quadrantCategories"]
+    },
+    "sorting": {
+        "default": {}
+    },
+    "tooltips": {
+        "roles": ["tooltipMeasure"],
+        "supportEnhancedTooltips": true,
+        "supportedTypes": {"default": true}
     },
     "privileges": []
 }

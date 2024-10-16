@@ -9,6 +9,7 @@ export class VisualSettings extends DataViewObjectsParser {
     public measure2Settings: MeasureSettings = new MeasureSettings();
     public measure3Settings: MeasureSettings = new MeasureSettings();
     public measure4Settings: MeasureSettings = new MeasureSettings();
+    public tooltipSettings: TooltipSettings = new TooltipSettings();
 }
 
 export class SeparatorSettings {
@@ -30,4 +31,8 @@ export class MeasureSettings {
     public shapeFillColor: string = "#ff0000";  // Default fill color
     public shapeStrokeColor: string = "#000000";  // Default stroke color
     public labelFontColor: string = "#000000";  // Font color for the label
+}
+
+export class TooltipSettings {
+    public show: boolean = true;
 }

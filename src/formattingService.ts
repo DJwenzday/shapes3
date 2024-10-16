@@ -8,7 +8,8 @@ export class FormattingService {
         return {
             cards: [
                 this.createShapeFormattingCard(settings),
-                this.createSeparatorFormattingCard(settings)
+                this.createSeparatorFormattingCard(settings),
+                this.createTooltipsFormattingCard(settings)
             ]
         };
     }    
@@ -65,6 +66,23 @@ export class FormattingService {
                         this.createColorPickerSlice("separatorSettings", "color", "Separator Color", settings.separatorSettings.color),
                         this.createNumberInputSlice("Separator Width", "separatorSettings", "width", settings.separatorSettings.width),
                         this.createToggleSlice("Show Separator", "separatorSettings", "show", settings.separatorSettings.show)
+                    ]
+                }
+            ]
+        };
+    }
+
+    private createTooltipsFormattingCard(settings: VisualSettings): powerbi.visuals.FormattingCard {
+        return {
+            uid: "tooltipsSettingsCard_uid",
+            displayName: "Tooltips Settings",
+            groups: [
+                {
+                    uid: "tooltipGroup_uid",
+                    displayName: undefined,
+                    slices: [
+                        
+                        this.createToggleSlice("Tooltips", "tooltipSettings", "show", settings.tooltipSettings.show)
                     ]
                 }
             ]
