@@ -9,7 +9,9 @@ export declare class Visual implements IVisual {
     private quadChart;
     private formattingService;
     private settings;
+    private selectionManager;
     constructor(options: VisualConstructorOptions);
+    private bindContextMenu;
     private extractValue;
     private getConditionalFormattingColor;
     update(options: VisualUpdateOptions): void;

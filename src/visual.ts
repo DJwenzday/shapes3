@@ -11,6 +11,7 @@ import PrimitiveValue = powerbi.PrimitiveValue;
 import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import FillDefinition = formattingSettings.ColorPicker
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
 
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
@@ -31,6 +32,7 @@ export class Visual implements IVisual {
     private quadChart: QuadChart;
     private formattingService: FormattingService;
     private settings: VisualSettings;
+    private selectionManager: ISelectionManager;
 
     constructor(options: VisualConstructorOptions) {
         this.formattingService = new FormattingService();
@@ -41,6 +43,23 @@ export class Visual implements IVisual {
             .attr('height', '100%');
 
         this.quadChart = new QuadChart(this.svg);
+        this.selectionManager = options.host.createSelectionManager();
+        this.bindContextMenu();
+    }
+
+    private bindContextMenu() {
+        this.svg.on('contextmenu', (event: MouseEvent) => {
+            event.preventDefault();
+
+            const MouseEvent = event as MouseEvent;
+            const dataPoint = {
+                category: "quadrantCategories",
+                measureValues: [ "shape1measure", "shape2measure", "shape3measure", "shape4measure" ]
+                
+            };
+
+            this.selectionManager.showContextMenu(dataPoint, { x: MouseEvent.clientX, y: MouseEvent.clientY });
+        });
     }
 
     private extractValue(value: PrimitiveValue | undefined): string | number {
