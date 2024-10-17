@@ -20,7 +20,7 @@ export class Shape {
         const stroke = shapeData.stroke || 'black';  // Use stroke color from measureSettings
         const shapeStroke = shapeData.shapeStroke || 2;  // Apply dynamic stroke width from settings
     
-        const shapeSize = Math.min(containerWidth, containerHeight) * 0.2;  // Dynamic shape size
+        const shapeSize = Math.min(containerWidth, containerHeight) * 0.3;  // Dynamic shape size
     
         let shapeElement;
         switch (shapeType) {
