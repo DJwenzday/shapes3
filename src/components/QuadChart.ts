@@ -54,42 +54,40 @@ export class QuadChart {
         measureSettingsArray: any[],
         shapeSize: number
     ) {
-        // Only draw if labels are enabled in settings
-        if (shapeSettings.show) {
-            // Top-left quadrant
-            this.drawShapeWithLabel(
-                width / 4, height / 4,
-                shapeSettings, 'Top-Left Quadrant',
-                measureTitles[0], measureSettingsArray[0], 
-                width, height, shapeSize
-            );
-
-            // Top-right quadrant
-            this.drawShapeWithLabel(
-                (3 * width) / 4, height / 4,
-                shapeSettings, 'Top-Right Quadrant',
-                measureTitles[1], measureSettingsArray[1], 
-                width, height, shapeSize
-            );
-
-            // Bottom-left quadrant
-            this.drawShapeWithLabel(
-                width / 4, (3 * height) / 4,
-                shapeSettings, 'Bottom-Left Quadrant',
-                measureTitles[2], measureSettingsArray[2], 
-                width, height, shapeSize
-            );
-
-            // Bottom-right quadrant
-            this.drawShapeWithLabel(
-                (3 * width) / 4, (3 * height) / 4,
-                shapeSettings, 'Bottom-Right Quadrant',
-                measureTitles[3], measureSettingsArray[3], 
-                width, height, shapeSize
-            );
-        }
+        // Draw the shapes independently of the label settings
+        // Top-left quadrant
+        this.drawShapeWithLabel(
+            width / 4, height / 4,
+            shapeSettings, 'Top-Left Quadrant',
+            measureTitles[0], measureSettingsArray[0], 
+            width, height, shapeSize, shapeSettings.show
+        );
+    
+        // Top-right quadrant
+        this.drawShapeWithLabel(
+            (3 * width) / 4, height / 4,
+            shapeSettings, 'Top-Right Quadrant',
+            measureTitles[1], measureSettingsArray[1], 
+            width, height, shapeSize, shapeSettings.show
+        );
+    
+        // Bottom-left quadrant
+        this.drawShapeWithLabel(
+            width / 4, (3 * height) / 4,
+            shapeSettings, 'Bottom-Left Quadrant',
+            measureTitles[2], measureSettingsArray[2], 
+            width, height, shapeSize, shapeSettings.show
+        );
+    
+        // Bottom-right quadrant
+        this.drawShapeWithLabel(
+            (3 * width) / 4, (3 * height) / 4,
+            shapeSettings, 'Bottom-Right Quadrant',
+            measureTitles[3], measureSettingsArray[3], 
+            width, height, shapeSize, shapeSettings.show
+        );
     }
-
+    
     private drawShapeWithLabel(
         x: number, 
         y: number, 
@@ -99,7 +97,8 @@ export class QuadChart {
         measureSettings: any, 
         containerWidth: number, 
         containerHeight: number, 
-        shapeSize: number
+        shapeSize: number,
+        showLabels: boolean // Added to control label visibility
     ): void {
         // Correctly pass measureSettings to ensure color and stroke are used
         const shapeElement = this.shapeDrawer.drawShape(
@@ -114,22 +113,24 @@ export class QuadChart {
             containerWidth, 
             containerHeight
         );
-
-        // Draw the label with correct settings
-        this.labelDrawer.drawLabel(
-            x,
-            y,
-            labelText,
-            shapeSettings.labelPosition,
-            shapeSettings.font,
-            shapeSettings.fontSize,
-            measureSettings.labelFontColor, // Label font color from settings
-            shapeSize
-        );
-
-        // Apply tooltips on hover
+    
+        // Only draw the label if labels are enabled in settings
+        if (showLabels) {
+            this.labelDrawer.drawLabel(
+                x,
+                y,
+                labelText,
+                shapeSettings.labelPosition,
+                shapeSettings.font,
+                shapeSettings.fontSize,
+                measureSettings.labelFontColor, // Label font color from settings
+                shapeSize
+            );
+        }
+    
+        // Apply tooltips on hover for the shapes
         shapeElement
             .on('mouseover', (event: MouseEvent) => this.tooltipService.showTooltip(tooltipText, event))
             .on('mouseout', () => this.tooltipService.hideTooltip());
     }
-}
+}    

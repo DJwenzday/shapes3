@@ -1,5 +1,5 @@
 {
-		"version": "1.0.1.4",
+		"version": "1.0.1.5",
 		"author": {"name":"CW2 Amanda Travis","email":"travis.amanda@gmail.com"},
 		"resources": [
 			{
@@ -8,7 +8,7 @@
 				"file": "resources/shapes3496F0A459D284A9E9C997EE681F8EE48.pbiviz.json"
 			}
 		],
-		"visual": {"name":"shapes3","displayName":"shapes3","guid":"shapes3496F0A459D284A9E9C997EE681F8EE48","visualClassName":"Visual","version":"1.0.1.4","description":"Time 100","supportUrl":"www.github.com","gitHubUrl":"https://github.com/DJwenzday/shapes3"},
+		"visual": {"name":"shapes3","displayName":"shapes3","guid":"shapes3496F0A459D284A9E9C997EE681F8EE48","visualClassName":"Visual","version":"1.0.1.5","description":"Time 100","supportUrl":"www.github.com","gitHubUrl":"https://github.com/DJwenzday/shapes3"},
 		"metadata": {
 			"pbivizjson": {
 				"resourceId": "rId0"
