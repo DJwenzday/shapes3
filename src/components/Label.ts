@@ -1,4 +1,4 @@
-//Label.ts
+// Label.ts
 import * as d3 from 'd3';
 
 export class Label {
@@ -20,6 +20,8 @@ export class Label {
     ): void {
         let labelX = x;
         let labelY = position === 'above' ? y - (shapeSize / 2) - fontSize : y;  // Adjust labelY dynamically
+
+        console.log("Drawing label at:", labelX, labelY, "with text:", text);
 
         this.container.append('text')
             .attr('x', labelX)

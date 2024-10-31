@@ -1,8 +1,8 @@
 {
     "dataRoles": [
         {
-            "name": "quadrantCategories",
-            "displayName": "Chart Categories",
+            "name": "category",
+            "displayName": "Category",
             "kind": "Grouping"
         },
         {
@@ -36,7 +36,7 @@
         {
             "conditions": [
                 {
-                    "quadrantCategories": { "max": 1},
+                    "category": { "max": 1},
                     "shape1measure": { "max": 1 },
                     "shape2measure": { "max": 1 },
                     "shape3measure": { "max": 1 },
@@ -45,9 +45,7 @@
             ],
             "categorical": {
                 "categories": {
-                    "for": {
-                        "in": "quadrantCategories"
-                    }
+                    "for": { "in": "category"}
                 },
                 "values": {
                     "select": [
@@ -59,7 +57,7 @@
                 }
             }
         }
-    ],
+],
 
     "objects": {
         "general":{
@@ -190,7 +188,8 @@
                     "type": {
                         "fill": {
                             "solid": {
-                                "color": true
+                                "color": true,
+                                "rule": { "ruleType": "formatting" }
                             }
                         }
                     }
@@ -215,7 +214,8 @@
                     "type": {
                         "fill": {
                             "solid": {
-                                "color": true
+                                "color": true,
+                                "rule": { "ruleType": "formatting" }
                             }
                         }
                     }
@@ -240,7 +240,8 @@
                     "type": {
                         "fill": {
                             "solid": {
-                                "color": true
+                                "color": true,
+                                "rule": { "ruleType": "formatting" }
                             }
                         }
                     }
@@ -249,7 +250,7 @@
         }
     },
     "drilldown": {
-        "roles": ["quadrantCategories"]
+        "roles": []
     },
     "sorting": {
         "default": {}

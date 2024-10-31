@@ -8,6 +8,7 @@ export declare class VisualSettings extends DataViewObjectsParser {
     measure3Settings: MeasureSettings;
     measure4Settings: MeasureSettings;
     tooltipSettings: TooltipSettings;
+    cards: Array<powerbi.visuals.FormattingCard>;
 }
 export declare class SeparatorSettings {
     color: string;

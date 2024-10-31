@@ -1,8 +1,7 @@
 import powerbi from "powerbi-visuals-api";
-import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
+import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
-import "./../style/visual.less";
 export declare class Visual implements IVisual {
     private target;
     private svg;
@@ -10,13 +9,10 @@ export declare class Visual implements IVisual {
     private formattingService;
     private settings;
     private selectionManager;
+    private formattingSettingsService;
     constructor(options: VisualConstructorOptions);
-    private bindContextMenu;
-    private extractValue;
-    private getConditionalFormattingColor;
     update(options: VisualUpdateOptions): void;
-    private getMeasureValuesAndTitles;
-    private toNumber;
+    private bindContextMenu;
     private static parseSettings;
     getFormattingModel(): powerbi.visuals.FormattingModel;
 }

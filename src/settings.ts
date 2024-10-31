@@ -10,6 +10,7 @@ export class VisualSettings extends DataViewObjectsParser {
     public measure3Settings: MeasureSettings = new MeasureSettings();
     public measure4Settings: MeasureSettings = new MeasureSettings();
     public tooltipSettings: TooltipSettings = new TooltipSettings();
+    public cards: Array<powerbi.visuals.FormattingCard> = [];  //new
 }
 
 export class SeparatorSettings {

@@ -1,4 +1,4 @@
-//shape.ts
+//Shape.ts
 import * as d3 from 'd3';
 
 export class Shape {
@@ -11,15 +11,15 @@ export class Shape {
     public drawShape(
         x: number, 
         y: number, 
-        shapeData: any, 
+        shapeData: { type: string; color: string; stroke: string; shapeStroke: number; },
         containerWidth: number, 
         containerHeight: number
     ): d3.Selection<SVGElement, unknown, HTMLElement, any> {
+        // Extraction and application of properties should be logged or verified
         const shapeType = shapeData.type || 'circle';
-        const color = shapeData.color || 'blue';  // Use the color from measureSettings
-        const stroke = shapeData.stroke || 'black';  // Use stroke color from measureSettings
+        const color = shapeData.color || 'blue';  // Default fallback color
+        const stroke = shapeData.stroke || 'black';
         const shapeStroke = shapeData.shapeStroke || 2;  // Apply dynamic stroke width from settings
-    
         const shapeSize = Math.min(containerWidth, containerHeight) * 0.3;  // Dynamic shape size
     
         let shapeElement;

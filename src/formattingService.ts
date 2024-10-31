@@ -1,18 +1,20 @@
 //formattingService.ts
-
 import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import { VisualSettings } from './settings';
 
-export class FormattingService {
+export class FormattingService { //three sections of Custom Format Pane
     public getFormattingModel(settings: VisualSettings): powerbi.visuals.FormattingModel {
-        return {
-            cards: [
-                this.createShapeFormattingCard(settings),
-                this.createSeparatorFormattingCard(settings),
-                this.createTooltipsFormattingCard(settings)
-            ]
-        };
-    }    
+        console.log("Constructing formatting model");
+
+        const cards: powerbi.visuals.FormattingCard[] = [
+            this.createShapeFormattingCard(settings),  //Shape Settings
+            this.createSeparatorFormattingCard(settings),  //Separator Settings
+            this.createTooltipsFormattingCard(settings)  //Tooltips Settings
+        ];
+
+        settings.cards = cards; // Add cards to VisualSettings
+        return { cards };       // Return formatting model with cards array
+    }   
 
     private createShapeFormattingCard(settings: VisualSettings): powerbi.visuals.FormattingCard {
         return {
@@ -36,20 +38,20 @@ export class FormattingService {
                     this.createDropdownSlice("Shape Type", "shapeSettings", "shapeType", settings.shapeSettings.shapeType), //Shape options
                     this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.shapeStroke), // Stroke size
                     this.createDropdownSlice("Label Position", "shapeSettings", "labelPosition", settings.shapeSettings.labelPosition), //label above or centered on shape
-                    this.createFontControlSlice(settings), //font family and size
+                    this.createFontControlSlice(settings), //font family and font size
                     this.createToggleSlice("Show Labels", "shapeSettings", "show", settings.shapeSettings.show) // Toggle for labels
                 ]
         };
     }    
 
-    private createMeasureFormattingGroup(displayName: string, measureSettings: any, objectName: string): powerbi.visuals.FormattingGroup {
+    private createMeasureFormattingGroup(displayName: string, measureSettings: any, objectName: string):powerbi.visuals.FormattingGroup {
         return {
                 uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Group_uid`,
                 displayName: `${displayName} Colors`,
                 slices: [
-                    this.createColorPickerSlice(objectName, "shapeFillColor", "Shape Fill", measureSettings.shapeFillColor),
-                    this.createColorPickerSlice(objectName, "shapeStrokeColor", "Shape Stroke", measureSettings.shapeStrokeColor),
-                    this.createColorPickerSlice(objectName, "labelFontColor", "Font Color", measureSettings.labelFontColor)
+                    this.createColorPickerSlice(objectName, "shapeFillColor", "Shape Fill", measureSettings.shapeFillColor),  //Conditional or Manual Shape Fill Color
+                    this.createColorPickerSlice(objectName, "shapeStrokeColor", "Shape Stroke", measureSettings.shapeStrokeColor), //Conditional or Manual Shape Stroke Color
+                    this.createColorPickerSlice(objectName, "labelFontColor", "Font Color", measureSettings.labelFontColor)  //Conditional or Manual Font Color
                 ]
             };
     }
@@ -63,9 +65,9 @@ export class FormattingService {
                     uid: "separatorGroup_uid",
                     displayName: undefined,
                     slices: [
-                        this.createColorPickerSlice("separatorSettings", "color", "Separator Color", settings.separatorSettings.color),
-                        this.createNumberInputSlice("Separator Width", "separatorSettings", "width", settings.separatorSettings.width),
-                        this.createToggleSlice("Show Separator", "separatorSettings", "show", settings.separatorSettings.show)
+                        this.createColorPickerSlice("separatorSettings", "color", "Separator Color", settings.separatorSettings.color), //Conditional or Manual Separator Color
+                        this.createNumberInputSlice("Separator Width", "separatorSettings", "width", settings.separatorSettings.width), //Manual Separator Size
+                        this.createToggleSlice("Show Separator", "separatorSettings", "show", settings.separatorSettings.show) //Turn On or Off the Separator
                     ]
                 }
             ]
@@ -82,7 +84,7 @@ export class FormattingService {
                     displayName: undefined,
                     slices: [
                         
-                        this.createToggleSlice("Tooltips", "tooltipSettings", "show", settings.tooltipSettings.show)
+                        this.createToggleSlice("Tooltips", "tooltipSettings", "show", settings.tooltipSettings.show) //Turn On or Off thr Tooltips
                     ]
                 }
             ]
