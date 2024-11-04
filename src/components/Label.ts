@@ -21,16 +21,25 @@ export class Label {
     ): void {
         const additionalSpacing = 5;
         const labelX = x;
-        let labelY = position === 'above' ? y - (shapeSize / 2) - fontSize - additionalSpacing : y;  // Adjust labelY with extra space
+        let labelY = y;
 
-        if (shapeType === 'triangle') {
-            if (position === 'above') {
-                labelY -= 5; // Adjust for triangle's "above" position
-            } else if (position === 'centered') {
+        if (position === 'above') {
+            // Ensure label stays above regardless of shape size or font size
+            labelY = y - (shapeSize / 2) - fontSize - additionalSpacing;
+
+            if (shapeType === 'triangle') {
+                labelY -= 10; // Adjust triangle label positioning further if needed
+            } else if (shapeType === 'circle' || shapeType === 'square') {
+                labelY -= 5; // Adjust for circle or square label positioning if needed
+            }
+        } else if (position === 'centered') {
+            labelY = y;
+
+            if (shapeType === 'triangle') {
                 labelY += 5; // Adjust for triangle's "centered" position
             }
         }
-        
+
         console.log("Drawing label at:", labelX, labelY, "with text:", text);
 
         this.container.append('text')
