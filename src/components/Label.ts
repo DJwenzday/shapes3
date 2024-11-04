@@ -19,13 +19,18 @@ export class Label {
         shapeSize: number,
         shapeType: string
     ): void {
-        const additionalSpacing= 5;
+        const additionalSpacing = 5;
         const labelX = x;
         let labelY = position === 'above' ? y - (shapeSize / 2) - fontSize - additionalSpacing : y;  // Adjust labelY with extra space
 
         if (shapeType === 'triangle') {
-            labelY += 10; // Adjust this value as needed for your design
+            if (position === 'above') {
+                labelY -= 5; // Adjust for triangle's "above" position
+            } else if (position === 'centered') {
+                labelY += 5; // Adjust for triangle's "centered" position
+            }
         }
+        
         console.log("Drawing label at:", labelX, labelY, "with text:", text);
 
         this.container.append('text')
