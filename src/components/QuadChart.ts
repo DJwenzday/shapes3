@@ -4,8 +4,7 @@ import { Separators } from './Separators';
 import { Shape } from './Shape';
 import { Label } from './Label';
 import { TooltipService } from '../services/tooltipService';
-import { MeasureSettings } from '../settings';
-import { dataViewObject, dataViewObjects } from 'powerbi-visuals-utils-dataviewutils';
+import { dataViewObjects } from 'powerbi-visuals-utils-dataviewutils';
 import powerbi from 'powerbi-visuals-api';
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import ISelectionId = powerbi.visuals.ISelectionId;
@@ -39,7 +38,6 @@ export class QuadChart {
     }
 
     // Correcting drawShapesAndLabels invocation and refining shape handling
-// QuadChart.ts
 
 public drawChart(
     width: number,
@@ -54,7 +52,7 @@ public drawChart(
 
     if (separatorSettings.show) {
         this.separators.drawVerticalLine(width / 2, height, separatorSettings);
-        this.separators.drawHorizontalLine(height / 2, width, separatorSettings);
+        this.separators.drawHorizontalLine(height / 2, width, separatorSettings, 10);
         console.log("Separators drawn");
     }
 
@@ -177,12 +175,11 @@ private drawShapeWithLabel(
             shapeSettings.font, 
             shapeSettings.fontSize, 
             fontColor, 
-            shapeSize
+            shapeSize,
+            shapeSettings.shapeType
         );
     }
 }
-
-
 
 
 // Add helper method to determine conditional color based on measure value

@@ -18,12 +18,12 @@ export class Separators {
             .attr('stroke-width', settings.width || 2);
     }
 
-    public drawHorizontalLine(yPosition: number, width: number, settings: any): void {
+    public drawHorizontalLine(yPosition: number, width: number, settings: any, offset: number = 0): void {
         this.container.append('line')
             .attr('x1', 0)
-            .attr('y1', yPosition)
+            .attr('y1', yPosition - offset)
             .attr('x2', width)
-            .attr('y2', yPosition)
+            .attr('y2', yPosition - offset)
             .attr('stroke', settings.color || 'black')
             .attr('stroke-width', settings.width || 2);
     }

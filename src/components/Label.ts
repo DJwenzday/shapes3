@@ -2,9 +2,9 @@
 import * as d3 from 'd3';
 
 export class Label {
-    private container: d3.Selection<SVGElement, unknown, HTMLElement, any>;
+    private container: d3.Selection<SVGElement, unknown, HTMLElement, string>;
 
-    constructor(container: d3.Selection<SVGElement, unknown, HTMLElement, any>) {
+    constructor(container: d3.Selection<SVGElement, unknown, HTMLElement, string>) {
         this.container = container;
     }
 
@@ -16,11 +16,16 @@ export class Label {
         font: string, 
         fontSize: number, 
         fontColor: string, 
-        shapeSize: number
+        shapeSize: number,
+        shapeType: string
     ): void {
-        let labelX = x;
-        let labelY = position === 'above' ? y - (shapeSize / 2) - fontSize : y;  // Adjust labelY dynamically
+        const additionalSpacing= 5;
+        const labelX = x;
+        let labelY = position === 'above' ? y - (shapeSize / 2) - fontSize - additionalSpacing : y;  // Adjust labelY with extra space
 
+        if (shapeType === 'triangle') {
+            labelY += 10; // Adjust this value as needed for your design
+        }
         console.log("Drawing label at:", labelX, labelY, "with text:", text);
 
         this.container.append('text')

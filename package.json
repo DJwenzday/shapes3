@@ -11,19 +11,22 @@
     "pbiviz": "pbiviz",
     "start": "pbiviz start",
     "package": "pbiviz package",
-    "lint": "npx eslint ."
+    "lint": "eslint . --ext .ts"
   },
   "dependencies": {
     "@types/d3": "7.4.3",
-    "d3": "7.9.0",
+    "d3": "^7.9.0",
     "powerbi-visuals-api": "~5.11.0",
     "powerbi-visuals-utils-dataviewutils": "^6.1.0",
     "powerbi-visuals-utils-formattingmodel": "^6.0.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.14.0",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
-    "eslint": "^9.11.1",
+    "eslint": "^8.57.1",
     "eslint-plugin-powerbi-visuals": "^1.0.0",
-    "typescript": "5.5.4"
+    "globals": "^15.12.0",
+    "typescript": "5.5.4",
+    "typescript-eslint": "^8.12.2"
   }
 }

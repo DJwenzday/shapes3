@@ -1,100 +1,42 @@
 # Shapes3 Power BI Custom Visual
 
 ## Overview
+Shapes3 is a custom Power BI visual designed to display shapes (circles, squares, triangles) in a quadrant layout with customizable settings. It supports dynamic data-driven shapes, conditional formatting, tooltips, and interactive context menus.
 
-The Shapes3 Power BI Custom Visual is a highly customizable visual representation tool designed to visualize data using geometric shapes within a quad chart format. The visual provides functionality to adjust shapes, colors, and labels based on user-selected measures, with support for conditional formatting.
+## Features
+- **Shapes**: Choose between circle, square, and triangle.
+- **Labels**: Customizable label position (centered or above the shape).
+- **Conditional Formatting**: Apply rules for shape fill color, stroke color, and label font color.
+- **Interaction**: Supports tooltips and a single context menu for the entire visual.
+- **Drill-through**: Integration for Power BI's context menu to trigger drill-through functionality.
+- **Customization**: Options for customizing shape size, color, and stroke width.
+- **Debugging**: Console logs for detailed debugging and transparency during development.
 
-## Requirements
+## Installation
+1. Download the `shapes3.pbiviz` file.
+2. Open Power BI Desktop.
+3. Navigate to **File > Import > Import from file** and select the `shapes3.pbiviz` file.
 
-### Features
-1. **Quad Chart Visualization:**
-   - Displays four quadrants with customizable shapes representing different data measures.
-   - Supports circle, square, and triangle shapes for visualization.
+## Usage
+1. Add the Shapes3 visual to your Power BI report.
+2. Drag and drop data into the measure fields.
+3. Customize the visual using the format pane settings.
+4. Set up conditional formatting rules for enhanced data visualization.
 
-2. **Shape Settings:**
-   - **Shape Type:** Allows selection of shape type (Circle, Square, or Triangle) for all quadrants.
-   - **Label Position:** Customizable label position (Centered or Above) relative to the shape.
-   - **Font Customization:** Users can set the font type, font size, and font color for shape labels.
-   - **Conditional Formatting:** Ability to apply rule-based (conditional) formatting to shape colors, label colors, and borders.
+## Known Issues
+- Conditional formatting for shapes only works if font conditional formatting is set. Without it, other rule-based conditions may not apply.
+- Dynamic Tooltips
 
-3. **Separator Settings:**
-   - **Color:** Customizable separator line color that divides the quadrants.
-   - **Width:** Ability to set the width of the separator line.
+## Future Enhancements
+- Optimize conditional formatting handling for independent rule-based settings.
+- Improve label positioning for various display options.
 
-### Data Binding
-1. **Data Roles:** 
-   - Supports four separate data roles, each representing a measure:
-     - Shape1 Measure
-     - Shape2 Measure
-     - Shape3 Measure
-     - Shape4 Measure
+## Troubleshooting
+- If conditional formatting does not work as expected, ensure that font color conditional formatting is set.
+- For detailed debugging, refer to the console logs in your browser or development tool.
 
-2. **Data Mapping:**
-   - Each measure is associated with its specific shape and label.
-   - Shape labels dynamically update to show the measure display name.
+## Contributions
+Contributions are welcome! Please submit a pull request or report issues via GitHub.
 
-### Conditional Formatting
-- **Shape Fill and Stroke Colors:**
-  - Supports conditional formatting (fx button) to change the fill and stroke colors of each shape based on rules.
-- **Label Font Color:**
-  - Each label has a customizable font color with conditional formatting options.
-
-### Formatting Pane
-- **Custom Control Sections:**
-  - **Separator Settings**
-    - Color
-    - Width
-  - **Shape Settings**
-    - Shape Type
-    - Label Position
-    - Font Family
-    - Font Size
-  - **Measure-Specific Settings (For each measure)**
-    - Shape Fill (Color) with conditional formatting
-    - Shape Stroke (Color) with conditional formatting
-    - Label Font Color with conditional formatting
-
-## File Structure
-
-The project follows a modular file structure to maintain clean and organized code. Below is the outline of the directory and file structure used:
-
-```plaintext
-/.
-├── .vscode/
-│   ├── launch.json
-│   ├── settings.json
-├── assets/
-│   ├── icon.png
-│   ├── styles.css
-├── src/
-│   ├── components/
-│   │   ├── QuadChart.ts
-│   │   ├── Separators.ts
-│   │   ├── Shape.ts
-│   │   ├── Label.ts
-│   ├── data/
-│   │   ├── dataModel.ts
-│   ├── utils/
-│   │   ├── constants.ts
-│   │   ├── utilityFunctions.ts
-│   ├── services/
-│   │   ├── colorService.ts
-│   │   ├── tooltipService.ts
-│   │   ├── drilldownService.ts
-│   ├── formattingService.ts
-│   ├── settings.ts
-│   ├── visual.ts
-├── style/
-│   ├── visual.less
-├── capabilities.json
-├── eslint.config.mjs
-├── package.json
-├── pbiviz.json
-├── tsconfig.json
-├── index.ts
-
-
-Make sure to install the following dependencies for the project:
-npm install powerbi-visuals-tools -g
-npm install powerbi-visuals-utils-formattingmodel
-npm install powerbi-visuals-utils-dataviewutils
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
