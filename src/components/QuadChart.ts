@@ -109,7 +109,7 @@ export class QuadChart {
     
             const measureValue = measures[0]?.values[index]; // Adjust this based on measure index logic
             const tooltipValue = tooltipColumn ? tooltipColumn.values[index] : null; // Get the tooltip value dynamically
-            const measureTitle = category ? category.toString() : 'N/A'; // Display name for label with fallback
+            const measureTitle = measures[index % measures.length]?.source.displayName || 'N/A'; // Use measure title instead of category name
     
             const x = (index % 2) * width / 2 + width / 4;
             const y = Math.floor(index / 2) * height / 2 + height / 4;
@@ -121,7 +121,7 @@ export class QuadChart {
                 shapeType: shapeSettings.shapeType // Ensure shapeType is correctly passed
             };
     
-            console.log(`Drawing shape for category "${measureTitle}" at index ${index}:`, measureSettings.shapeType);
+            console.log(`Drawing shape for measure title "${measureTitle}" at index ${index}:`, measureSettings.shapeType);
     
             // Draw shape and bind events
             const shapeElement = this.shapeDrawer.drawShape(
@@ -142,7 +142,7 @@ export class QuadChart {
                 event.preventDefault();
                 event.stopPropagation();
                 this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
-                console.log("Context menu triggered for category:", measureTitle);
+                console.log("Context menu triggered for measure title:", measureTitle);
             });
     
             shapeElement.on('mouseover', (event: MouseEvent) => {
@@ -157,7 +157,7 @@ export class QuadChart {
                 const labelElement = this.labelDrawer.drawLabel(
                     x,
                     y,
-                    measureTitle,
+                    measureTitle, // Use measure title for the label text
                     shapeSettings.labelPosition,
                     shapeSettings.font,
                     shapeSettings.fontSize,
@@ -173,7 +173,7 @@ export class QuadChart {
                         event.preventDefault();
                         event.stopPropagation();
                         this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
-                        console.log("Context menu triggered for category:", measureTitle, "from label");
+                        console.log("Context menu triggered for measure title:", measureTitle, "from label");
                     });
     
                     labelElement.on('mouseover', (event: MouseEvent) => {
@@ -185,5 +185,5 @@ export class QuadChart {
                 }
             }
         });
-    }        
+    }            
 }
