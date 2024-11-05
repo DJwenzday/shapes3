@@ -4,6 +4,6 @@ import DataView = powerbi.DataView;
 export declare class Label {
     private container;
     constructor(container: d3.Selection<SVGElement, unknown, HTMLElement, string>);
-    drawLabel(x: number, y: number, text: string, position: string, font: string, fontSize: number, defaultFontColor: string, shapeSize: number, shapeType: string, measureSettings: any, dataView: DataView): void;
+    drawLabel(x: number, y: number, text: string, position: string, font: string, fontSize: number, defaultFontColor: string, shapeSize: number, shapeType: string, measureSettings: any, dataView: DataView): d3.Selection<SVGTextElement, unknown, HTMLElement, any>;
     private getConditionalFormattingColor;
 }

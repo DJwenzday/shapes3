@@ -23,7 +23,7 @@ export class Label {
         shapeType: string,
         measureSettings: any,
         dataView: DataView
-    ): void {
+    ): d3.Selection<SVGTextElement, unknown, HTMLElement, any> {
         const fontColor = this.getConditionalFormattingColor(
             measureSettings.objectName,
             'labelFontColor',
@@ -52,7 +52,7 @@ export class Label {
 
         console.log("Drawing label at:", labelX, labelY, "with text:", text);
 
-        this.container.append('text')
+        const labelElement = this.container.append('text')
             .attr('x', labelX)
             .attr('y', labelY)
             .attr('text-anchor', 'middle')
@@ -61,6 +61,8 @@ export class Label {
             .attr('font-size', `${fontSize}px`)
             .attr('fill', fontColor)
             .text(text);
+
+        return labelElement;
     }
 
     private getConditionalFormattingColor(

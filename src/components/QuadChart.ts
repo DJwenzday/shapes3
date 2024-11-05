@@ -97,27 +97,27 @@ export class QuadChart {
             settings.measure3Settings,
             settings.measure4Settings
         ];
-
+    
         categoryColumn.values.forEach((category, index) => {
             const selectionId = this.host.createSelectionIdBuilder()
                 .withCategory(categoryColumn, index)
                 .createSelectionId();
-
+    
             const measureValue = measures[0]?.values[index]; // Adjust this based on measure index logic
             const measureTitle = category ? category.toString() : 'N/A'; // Display name for label with fallback
-
+    
             const x = (index % 2) * width / 2 + width / 4;
             const y = Math.floor(index / 2) * height / 2 + height / 4;
-
+    
             const measureSettings = {
                 ...measureSettingsArray[index % measureSettingsArray.length],
                 measureValue: measureValue,
                 objectName: `measure${(index % 4) + 1}Settings`,
                 shapeType: shapeSettings.shapeType // Ensure shapeType is correctly passed
             };
-
+    
             console.log(`Drawing shape for category "${measureTitle}" at index ${index}:`, measureSettings.shapeType);
-
+    
             const shapeElement = this.shapeDrawer.drawShape(
                 x,
                 y,
@@ -131,22 +131,22 @@ export class QuadChart {
                 measureSettings,
                 dataView
             );
-
+    
             shapeElement.on('contextmenu', (event: MouseEvent) => {
                 event.preventDefault();
                 this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
                 console.log("Context menu triggered for category:", measureTitle);
             });
-
+    
             shapeElement.on('mouseover', (event: MouseEvent) => {
-                // Convert measureValue to string for the tooltip
                 const tooltipText = measureValue !== null && measureValue !== undefined ? String(measureValue) : 'N/A';
                 this.tooltipService.showTooltip(tooltipText, event);
             }).on('mouseout', () => {
                 this.tooltipService.hideTooltip();
-            })
-
-            this.labelDrawer.drawLabel(
+            });
+    
+            // Draw label and bind contextmenu event
+            const labelElement = this.labelDrawer.drawLabel(
                 x,
                 y,
                 measureTitle,
@@ -158,7 +158,18 @@ export class QuadChart {
                 measureSettings.shapeType,
                 measureSettings,
                 dataView
-            );
+            ) as d3.Selection<SVGTextElement, unknown, HTMLElement, any>;
+    
+            // Check and bind event
+            if (labelElement) {
+                labelElement.on('contextmenu', (event: MouseEvent) => {
+                    event.preventDefault();
+                    this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+                    console.log("Context menu triggered for category:", measureTitle, "from label");
+                });
+            }
         });
     }
+    
+
 }
