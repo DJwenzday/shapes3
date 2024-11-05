@@ -164,6 +164,7 @@ export class QuadChart {
             if (labelElement) {
                 labelElement.on('contextmenu', (event: MouseEvent) => {
                     event.preventDefault();
+                    event.stopPropagation();
                     this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
                     console.log("Context menu triggered for category:", measureTitle, "from label");
                 });
