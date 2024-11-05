@@ -19,6 +19,7 @@ export class QuadChart {
     private tooltipService: TooltipService;
     private selectionManager: ISelectionManager;
     private host: IVisualHost;
+    private data: any[];
 
     constructor(container: d3.Selection<SVGElement, unknown, HTMLElement, any>, selectionManager: ISelectionManager, host: IVisualHost) {
         this.container = container;
@@ -29,6 +30,28 @@ export class QuadChart {
         this.selectionManager = selectionManager;
         this.host = host;
         console.log("QuadChart initialized");
+    }
+
+    public draw(data: any[]): void {
+        this.data = data;
+
+        this.container.selectAll('circle')
+            .data(data)
+            .join('circle')
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('r', 20) // Example radius
+            .style('fill', d => d.color)
+            .on('contextmenu', (event, d) => {
+                event.preventDefault();
+                if (d.selectionId) {
+                    this.selectionManager.showContextMenu(d.selectionId, {
+                        x: event.clientX,
+                        y: event.clientY
+                    });
+                    console.log('Context menu triggered for:', d.selectionId);
+                }
+            });
     }
 
     public drawChart(
@@ -75,24 +98,27 @@ export class QuadChart {
             settings.measure4Settings
         ];
 
-        measures.forEach((measure, index) => {
-            const measureValue = measure.values[0];
-            const measureTitle = measure.source.displayName;
+        categoryColumn.values.forEach((category, index) => {
+            const selectionId = this.host.createSelectionIdBuilder()
+                .withCategory(categoryColumn, index)
+                .createSelectionId();
+
+            const measureValue = measures[0]?.values[index]; // Adjust this based on measure index logic
+            const measureTitle = category ? category.toString() : 'N/A'; // Display name for label with fallback
+
             const x = (index % 2) * width / 2 + width / 4;
             const y = Math.floor(index / 2) * height / 2 + height / 4;
 
             const measureSettings = {
-                ...measureSettingsArray[index],
+                ...measureSettingsArray[index % measureSettingsArray.length],
                 measureValue: measureValue,
-                objectName: `measure${index + 1}Settings`,
+                objectName: `measure${(index % 4) + 1}Settings`,
                 shapeType: shapeSettings.shapeType // Ensure shapeType is correctly passed
             };
 
-            // Debug log to ensure shape type is correct
-            console.log(`Drawing shape type for measure ${index + 1}:`, measureSettings.shapeType);
+            console.log(`Drawing shape for category "${measureTitle}" at index ${index}:`, measureSettings.shapeType);
 
-            // Draw the shape using the correct shape type from measureSettings
-            this.shapeDrawer.drawShape(
+            const shapeElement = this.shapeDrawer.drawShape(
                 x,
                 y,
                 {
@@ -106,7 +132,18 @@ export class QuadChart {
                 dataView
             );
 
-            // Draw the label
+            shapeElement.on('contextmenu', (event: MouseEvent) => {
+                event.preventDefault();
+                this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+                console.log("Context menu triggered for category:", measureTitle);
+            });
+
+            shapeElement.on('mouseover', (event: MouseEvent) => {
+                this.tooltipService.showTooltip(measureTitle, event);
+            }).on('mouseout', () => {
+                this.tooltipService.hideTooltip();
+            });
+
             this.labelDrawer.drawLabel(
                 x,
                 y,
@@ -116,7 +153,7 @@ export class QuadChart {
                 shapeSettings.fontSize,
                 measureSettings.labelFontColor || '#000000',
                 shapeSize,
-                measureSettings.shapeType, // Pass the correct shape type
+                measureSettings.shapeType,
                 measureSettings,
                 dataView
             );

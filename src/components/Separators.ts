@@ -15,7 +15,7 @@ export class Separators {
             .attr('x2', xPosition)
             .attr('y2', height)
             .attr('stroke', settings.color || 'black')
-            .attr('stroke-width', settings.width || 2);
+            .attr('strokeWidth', settings.strokeWidth || 2);
     }
 
     public drawHorizontalLine(yPosition: number, width: number, settings: any, offset: number = 0): void {
@@ -25,6 +25,6 @@ export class Separators {
             .attr('x2', width)
             .attr('y2', yPosition - offset)
             .attr('stroke', settings.color || 'black')
-            .attr('stroke-width', settings.width || 2);
+            .attr('strokeWidth', settings.strokeWidth || 2);
     }
 }
