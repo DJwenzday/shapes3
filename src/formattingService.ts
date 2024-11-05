@@ -1,5 +1,5 @@
 //formattingService.ts
-import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
+//import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import { VisualSettings } from './settings';
 
 export class FormattingService { //three sections of Custom Format Pane
@@ -36,7 +36,7 @@ export class FormattingService { //three sections of Custom Format Pane
                 displayName: "General Settings",
                 slices: [
                     this.createDropdownSlice("Shape Type", "shapeSettings", "shapeType", settings.shapeSettings.shapeType), //Shape options
-                    this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.strokeWidth), // Stroke size
+                    this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.width), // Stroke size
                     this.createDropdownSlice("Label Position", "shapeSettings", "labelPosition", settings.shapeSettings.labelPosition), //label above or centered on shape
                     this.createFontControlSlice(settings), //font family and font size
                     this.createToggleSlice("Show Labels", "shapeSettings", "show", settings.shapeSettings.show) // Toggle for labels
@@ -68,7 +68,7 @@ export class FormattingService { //three sections of Custom Format Pane
                     displayName: undefined,
                     slices: [
                         this.createColorPickerSlice("separatorSettings", "color", "Separator Color", settings.separatorSettings.color), //Conditional or Manual Separator Color
-                        this.createNumberInputSlice("Separator Width", "separatorSettings", "width", settings.separatorSettings.strokeWidth), //Manual Separator Size
+                        this.createNumberInputSlice("Separator Width", "separatorSettings", "width", settings.separatorSettings.width), //Manual Separator Size
                         this.createToggleSlice("Show Separator", "separatorSettings", "show", settings.separatorSettings.show) //Turn On or Off the Separator
                     ]
                 }

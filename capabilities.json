@@ -109,7 +109,7 @@
                         ]
                     }
                 },
-                "shapeStroke": {
+                "width": {
                     "displayName": "Shape Stroke",
                     "type": {
                         "numeric": true

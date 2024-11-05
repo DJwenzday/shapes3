@@ -68,7 +68,7 @@ export class Visual implements IVisual {
                 category: "quadChart",
                 value: []
             };
-            this.selectionManager.showContextMenu(dataPoint, { x: event.clientX, y: event.clientY }); event.preventDefault(); event.stopPropagation();
+            this.selectionManager.showContextMenu(dataPoint, { x: event.clientX, y: event.clientY });
         });
     }
 

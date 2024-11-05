@@ -126,7 +126,7 @@ export class QuadChart {
                     type: measureSettings.shapeType || 'circle',
                     defaultColor: measureSettings.shapeFillColor || '#000000',
                     defaultStroke: measureSettings.shapeStrokeColor || '#000000',
-                    shapeStroke: shapeSettings.strokeWidth || 2
+                    strokeWidth: shapeSettings.strokeWidth || 2
                 },
                 shapeSize,
                 measureSettings,
@@ -135,6 +135,7 @@ export class QuadChart {
         
             shapeElement.on('contextmenu', (event: MouseEvent) => {
                 event.preventDefault();
+                event.stopPropagation();
                 this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
                 console.log("Context menu triggered for category:", measureTitle);
             });
@@ -178,5 +179,4 @@ export class QuadChart {
             }
         });
     }
-    
 }

@@ -8,7 +8,7 @@ export declare class Shape {
         type: string;
         defaultColor: string;
         defaultStroke: string;
-        shapeStroke: number;
+        strokeWidth: number;
     }, shapeSize: number, measureSettings: any, dataView: DataView): d3.Selection<SVGElement, unknown, HTMLElement, any>;
     private getConditionalFormattingColor;
 }

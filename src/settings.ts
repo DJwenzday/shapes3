@@ -15,13 +15,13 @@ export class VisualSettings extends DataViewObjectsParser {
 
 export class SeparatorSettings {
     public color: string = "#000000";
-    public strokeWidth: number = 2;
+    public width: number = 2;
     public show: boolean = true; // Toggle for showing separator
 }
 
 export class ShapeSettings {
     public shapeType: string = "circle"; 
-    public strokeWidth: number = 2; // Stroke size of shape
+    public width: number = 2; // Stroke size of shape
     public labelPosition: string = "centered";
     public font: string = "Segoe UI";
     public fontSize: number = 12;

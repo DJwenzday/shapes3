@@ -12,12 +12,12 @@ export declare class VisualSettings extends DataViewObjectsParser {
 }
 export declare class SeparatorSettings {
     color: string;
-    strokeWidth: number;
+    width: number;
     show: boolean;
 }
 export declare class ShapeSettings {
     shapeType: string;
-    strokeWidth: number;
+    width: number;
     labelPosition: string;
     font: string;
     fontSize: number;

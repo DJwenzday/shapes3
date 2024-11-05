@@ -14,7 +14,7 @@ export class Shape {
     public drawShape(
         x: number,
         y: number,
-        shapeData: { type: string; defaultColor: string; defaultStroke: string; shapeStroke: number; },
+        shapeData: { type: string; defaultColor: string; defaultStroke: string; strokeWidth: number; },
         shapeSize: number,
         measureSettings: any,
         dataView: DataView
@@ -36,7 +36,7 @@ export class Shape {
         );
 
         const shapeType = shapeData.type || 'circle';
-        const shapeStroke = shapeData.shapeStroke || 2;
+        const strokeWidth = shapeData.strokeWidth|| 2;
 
         let shapeElement;
         switch (shapeType) {
@@ -47,7 +47,7 @@ export class Shape {
                     .attr('r', shapeSize / 2)
                     .attr('fill', fillColor)
                     .attr('stroke', strokeColor)
-                    .attr('stroke-width', shapeStroke);
+                    .attr('stroke-width', strokeWidth);
                 break;
             case 'square':
                 shapeElement = this.container.append('rect')
@@ -57,14 +57,14 @@ export class Shape {
                     .attr('height', shapeSize)
                     .attr('fill', fillColor)
                     .attr('stroke', strokeColor)
-                    .attr('stroke-width', shapeStroke);
+                    .attr('stroke-width', strokeWidth);
                 break;
             case 'triangle':
                 shapeElement = this.container.append('polygon')
                     .attr('points', `${x},${y - shapeSize / 2} ${x - shapeSize / 2},${y + shapeSize / 2} ${x + shapeSize / 2},${y + shapeSize / 2}`)
                     .attr('fill', fillColor)
                     .attr('stroke', strokeColor)
-                    .attr('stroke-width', shapeStroke);
+                    .attr('stroke-width', strokeWidth);
                 break;
             default:
                 console.error('Invalid shape type:', shapeType);
