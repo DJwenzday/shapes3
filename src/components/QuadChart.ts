@@ -139,10 +139,12 @@ export class QuadChart {
             });
 
             shapeElement.on('mouseover', (event: MouseEvent) => {
-                this.tooltipService.showTooltip(measureTitle, event);
+                // Convert measureValue to string for the tooltip
+                const tooltipText = measureValue !== null && measureValue !== undefined ? String(measureValue) : 'N/A';
+                this.tooltipService.showTooltip(tooltipText, event);
             }).on('mouseout', () => {
                 this.tooltipService.hideTooltip();
-            });
+            })
 
             this.labelDrawer.drawLabel(
                 x,
