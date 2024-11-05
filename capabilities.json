@@ -163,8 +163,7 @@
                         "fill": {
                             "solid": {
                                 "color": true
-                            },
-                            "rule": { "ruleType": "formatting" }
+                            }
                         }
                     }
                 }
@@ -188,8 +187,7 @@
                     "type": {
                         "fill": {
                             "solid": {
-                                "color": true,
-                                "rule": { "ruleType": "formatting" }
+                                "color": true
                             }
                         }
                     }
@@ -214,8 +212,7 @@
                     "type": {
                         "fill": {
                             "solid": {
-                                "color": true,
-                                "rule": { "ruleType": "formatting" }
+                                "color": true
                             }
                         }
                     }
@@ -240,8 +237,7 @@
                     "type": {
                         "fill": {
                             "solid": {
-                                "color": true,
-                                "rule": { "ruleType": "formatting" }
+                                "color": true
                             }
                         }
                     }

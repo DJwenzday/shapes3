@@ -36,7 +36,7 @@ export class FormattingService { //three sections of Custom Format Pane
                 displayName: "General Settings",
                 slices: [
                     this.createDropdownSlice("Shape Type", "shapeSettings", "shapeType", settings.shapeSettings.shapeType), //Shape options
-                    this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.shapeStroke), // Stroke size
+                    this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.strokeWidth), // Stroke size
                     this.createDropdownSlice("Label Position", "shapeSettings", "labelPosition", settings.shapeSettings.labelPosition), //label above or centered on shape
                     this.createFontControlSlice(settings), //font family and font size
                     this.createToggleSlice("Show Labels", "shapeSettings", "show", settings.shapeSettings.show) // Toggle for labels
@@ -44,17 +44,19 @@ export class FormattingService { //three sections of Custom Format Pane
         };
     }    
 
-    private createMeasureFormattingGroup(displayName: string, measureSettings: any, objectName: string):powerbi.visuals.FormattingGroup {
+    private createMeasureFormattingGroup(displayName: string, measureSettings: any, objectName: string): powerbi.visuals.FormattingGroup {
         return {
-                uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Group_uid`,
-                displayName: `${displayName} Colors`,
-                slices: [
-                    this.createColorPickerSlice(objectName, "shapeFillColor", "Shape Fill", measureSettings.shapeFillColor),  //Conditional or Manual Shape Fill Color
-                    this.createColorPickerSlice(objectName, "shapeStrokeColor", "Shape Stroke", measureSettings.shapeStrokeColor), //Conditional or Manual Shape Stroke Color
-                    this.createColorPickerSlice(objectName, "labelFontColor", "Font Color", measureSettings.labelFontColor)  //Conditional or Manual Font Color
-                ]
-            };
+            uid: `${displayName.toLowerCase().replace(/\s+/g, '')}Group_uid`,
+            displayName: `${displayName} Colors`,
+            slices: [
+                this.createColorPickerSlice(objectName, "shapeFillColor", "Shape Fill", measureSettings.shapeFillColor),
+                this.createColorPickerSlice(objectName, "shapeStrokeColor", "Shape Stroke", measureSettings.shapeStrokeColor),
+                this.createColorPickerSlice(objectName, "labelFontColor", "Font Color", measureSettings.labelFontColor),
+                // Optional: Add conditional rule slicer or reference to existing settings for rules
+            ]
+        };
     }
+    
 
     private createSeparatorFormattingCard(settings: VisualSettings): powerbi.visuals.FormattingCard {
         return {
@@ -66,7 +68,7 @@ export class FormattingService { //three sections of Custom Format Pane
                     displayName: undefined,
                     slices: [
                         this.createColorPickerSlice("separatorSettings", "color", "Separator Color", settings.separatorSettings.color), //Conditional or Manual Separator Color
-                        this.createNumberInputSlice("Separator Width", "separatorSettings", "width", settings.separatorSettings.width), //Manual Separator Size
+                        this.createNumberInputSlice("Separator Width", "separatorSettings", "width", settings.separatorSettings.strokeWidth), //Manual Separator Size
                         this.createToggleSlice("Show Separator", "separatorSettings", "show", settings.separatorSettings.show) //Turn On or Off the Separator
                     ]
                 }
@@ -170,7 +172,7 @@ export class FormattingService { //three sections of Custom Format Pane
         };
     }
 
-    private createColorPickerSlice(objectName: string, propertyName: string, displayName: string, colorValue: string): powerbi.visuals.FormattingSlice {
+    private createColorPickerSlice(objectName: string, propertyName: string, displayName: string, defaultColor: string): powerbi.visuals.FormattingSlice {
         return {
             uid: `${propertyName}_uid`,
             displayName: displayName,
@@ -182,7 +184,7 @@ export class FormattingService { //three sections of Custom Format Pane
                         propertyName: propertyName,
                         instanceKind: powerbi.VisualEnumerationInstanceKinds.ConstantOrRule
                     },
-                    value: { value: colorValue }
+                    value: { value: defaultColor }
                 }
             }
         };

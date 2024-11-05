@@ -10,6 +10,7 @@ export declare class Visual implements IVisual {
     private settings;
     private selectionManager;
     private formattingSettingsService;
+    private host;
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
     private bindContextMenu;

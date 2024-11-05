@@ -2,11 +2,9 @@
 import * as d3 from 'd3';
 import powerbi from "powerbi-visuals-api";
 import IVisual = powerbi.extensibility.visual.IVisual;
-
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
-import { formattingSettings } from "powerbi-visuals-utils-formattingmodel";
 import { FormattingService } from './formattingService';
 import { VisualSettings } from './settings';
 import { QuadChart } from './components/QuadChart';
@@ -20,9 +18,11 @@ export class Visual implements IVisual {
     private settings: VisualSettings;
     private selectionManager: ISelectionManager;
     private formattingSettingsService: FormattingSettingsService;
+    private host: powerbi.extensibility.visual.IVisualHost;
 
     constructor(options: VisualConstructorOptions) {
         console.log("Initializing Visual");
+        this.host = options.host;
         this.formattingService = new FormattingService();
         this.formattingSettingsService = new FormattingSettingsService();
         this.target = options.element;
@@ -36,28 +36,28 @@ export class Visual implements IVisual {
         this.bindContextMenu();
     }
 
-public update(options: VisualUpdateOptions) {
-    console.log("Visual update called");
-    const dataView = options.dataViews && options.dataViews[0];
-    if (!dataView) {
-        console.warn("No data view available");
-        return;
-    }
+    public update(options: VisualUpdateOptions) {
+        console.log("Visual update called");
+        const dataView = options.dataViews && options.dataViews[0];
+        if (!dataView || !dataView.categorical || !dataView.categorical.values) {
+            console.warn("No data view available");
+            return;
+        }
     
-    this.settings = Visual.parseSettings(dataView);
-    console.log("Settings parsed:", this.settings);
-
-    this.quadChart.drawChart(
-        options.viewport.width,
-        options.viewport.height,
-        this.settings.separatorSettings,
-        this.settings.shapeSettings,
-        dataView,
-        this.settings  // Pass settings to QuadChart
-    );
-
-    console.log("Chart rendered with dimensions:", options.viewport.width, options.viewport.height);
-}
+        this.settings = Visual.parseSettings(dataView);
+        console.log("Settings parsed:", this.settings);
+    
+        this.quadChart.drawChart(
+            options.viewport.width,
+            options.viewport.height,
+            this.settings.separatorSettings,
+            this.settings.shapeSettings,
+            dataView,
+            this.settings
+        );
+    
+        console.log("Chart rendered with dimensions:", options.viewport.width, options.viewport.height);
+    }
 
     private bindContextMenu() {
         this.svg.on('contextmenu', (event: MouseEvent) => {
@@ -80,7 +80,5 @@ public update(options: VisualUpdateOptions) {
     public getFormattingModel(): powerbi.visuals.FormattingModel {
         console.log("Retrieving formatting model for custom format pane");
         return this.formattingService.getFormattingModel(this.settings);
-        //return this.formattingSettingsService.populateFormattingSettingsModel(this.settings);
-        //eturn this.formattingSettingsService.buildFormattingModel(this.settings);
     }
 }

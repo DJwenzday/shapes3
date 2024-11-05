@@ -12,12 +12,12 @@ export declare class VisualSettings extends DataViewObjectsParser {
 }
 export declare class SeparatorSettings {
     color: string;
-    width: number;
+    strokeWidth: number;
     show: boolean;
 }
 export declare class ShapeSettings {
     shapeType: string;
-    shapeStroke: number;
+    strokeWidth: number;
     labelPosition: string;
     font: string;
     fontSize: number;
@@ -27,6 +27,7 @@ export declare class MeasureSettings {
     shapeFillColor: string;
     shapeStrokeColor: string;
     labelFontColor: string;
+    conditionalFormattingRules: any[];
 }
 export declare class TooltipSettings {
     show: boolean;
