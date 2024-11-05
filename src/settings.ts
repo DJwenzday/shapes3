@@ -21,7 +21,7 @@ export class SeparatorSettings {
 
 export class ShapeSettings {
     public shapeType: string = "circle"; 
-    public width: number = 2; // Stroke size of shape
+    public shapeStrokeWidth: number = 2; // Stroke size of shape
     public labelPosition: string = "centered";
     public font: string = "Segoe UI";
     public fontSize: number = 12;

@@ -36,7 +36,7 @@ export class FormattingService { //three sections of Custom Format Pane
                 displayName: "General Settings",
                 slices: [
                     this.createDropdownSlice("Shape Type", "shapeSettings", "shapeType", settings.shapeSettings.shapeType), //Shape options
-                    this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStroke", settings.shapeSettings.width), // Stroke size
+                    this.createNumberInputSlice("Shape Stroke", "shapeSettings", "shapeStrokeWidth", settings.shapeSettings.shapeStrokeWidth), // Stroke size
                     this.createDropdownSlice("Label Position", "shapeSettings", "labelPosition", settings.shapeSettings.labelPosition), //label above or centered on shape
                     this.createFontControlSlice(settings), //font family and font size
                     this.createToggleSlice("Show Labels", "shapeSettings", "show", settings.shapeSettings.show) // Toggle for labels

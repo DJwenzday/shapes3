@@ -17,7 +17,7 @@ export declare class SeparatorSettings {
 }
 export declare class ShapeSettings {
     shapeType: string;
-    width: number;
+    shapeStrokeWidth: number;
     labelPosition: string;
     font: string;
     fontSize: number;

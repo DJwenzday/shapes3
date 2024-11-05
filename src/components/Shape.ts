@@ -14,7 +14,7 @@ export class Shape {
     public drawShape(
         x: number,
         y: number,
-        shapeData: { type: string; defaultColor: string; defaultStroke: string; strokeWidth: number; },
+        shapeData: { type: string; defaultColor: string; defaultStroke: string; width: number; },
         shapeSize: number,
         measureSettings: any,
         dataView: DataView
@@ -36,7 +36,7 @@ export class Shape {
         );
 
         const shapeType = shapeData.type || 'circle';
-        const strokeWidth = shapeData.strokeWidth|| 2;
+        const strokeWidth = shapeData.width || measureSettings.shapeStrokeWidth || 2;
 
         let shapeElement;
         switch (shapeType) {

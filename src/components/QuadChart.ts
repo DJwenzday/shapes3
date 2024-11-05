@@ -126,7 +126,7 @@ export class QuadChart {
                     type: measureSettings.shapeType || 'circle',
                     defaultColor: measureSettings.shapeFillColor || '#000000',
                     defaultStroke: measureSettings.shapeStrokeColor || '#000000',
-                    strokeWidth: shapeSettings.strokeWidth || 2
+                    width: shapeSettings.shapeStrokeWidth || 2
                 },
                 shapeSize,
                 measureSettings,
