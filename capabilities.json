@@ -52,7 +52,9 @@
                         { "bind": { "to": "shape1measure" } },
                         { "bind": { "to": "shape2measure" } },
                         { "bind": { "to": "shape3measure" } },
-                        { "bind": { "to": "shape4measure" } }
+                        { "bind": { "to": "shape4measure" } },
+                        { "bind": { "to": "tooltipMeasure" } }
+
                     ]
                 }
             }

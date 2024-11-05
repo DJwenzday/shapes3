@@ -32,7 +32,7 @@ export class Label {
             measureSettings.measureValue
         );
 
-        const additionalSpacing = 5;
+        const additionalSpacing = 3;
         const labelX = x;
         let labelY = y;
 

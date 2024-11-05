@@ -1,3 +1,4 @@
+//QuadChart.ts
 import * as d3 from 'd3';
 import { Separators } from './Separators';
 import { Shape } from './Shape';
@@ -98,12 +99,16 @@ export class QuadChart {
             settings.measure4Settings
         ];
     
+        // Extract the tooltip data column if available
+        const tooltipColumn = dataView.categorical.values.find(value => value.source.roles["tooltipMeasure"]);
+    
         categoryColumn.values.forEach((category, index) => {
             const selectionId = this.host.createSelectionIdBuilder()
                 .withCategory(categoryColumn, index)
                 .createSelectionId();
     
             const measureValue = measures[0]?.values[index]; // Adjust this based on measure index logic
+            const tooltipValue = tooltipColumn ? tooltipColumn.values[index] : null; // Get the tooltip value dynamically
             const measureTitle = category ? category.toString() : 'N/A'; // Display name for label with fallback
     
             const x = (index % 2) * width / 2 + width / 4;
@@ -141,13 +146,12 @@ export class QuadChart {
             });
     
             shapeElement.on('mouseover', (event: MouseEvent) => {
-                const tooltipText = measureValue !== null && measureValue !== undefined ? String(measureValue) : 'N/A';
+                const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
                 this.tooltipService.showTooltip(tooltipText, event);
             }).on('mouseout', () => {
                 this.tooltipService.hideTooltip();
             });
     
-            // **Add this conditional block**
             if (shapeSettings.show) {
                 // Draw label and bind events
                 const labelElement = this.labelDrawer.drawLabel(
@@ -173,7 +177,7 @@ export class QuadChart {
                     });
     
                     labelElement.on('mouseover', (event: MouseEvent) => {
-                        const tooltipText = measureValue !== null && measureValue !== undefined ? String(measureValue) : 'N/A';
+                        const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
                         this.tooltipService.showTooltip(tooltipText, event);
                     }).on('mouseout', () => {
                         this.tooltipService.hideTooltip();
@@ -181,5 +185,5 @@ export class QuadChart {
                 }
             }
         });
-    }    
+    }        
 }
