@@ -83,7 +83,7 @@ public drawChart(
         console.log("Separators drawn");
     }
 
-    const shapeSize = Math.min(width, height) * 0.2;
+    const shapeSize = Math.min(width, height) * 0.3;
     console.log("Calculated shape size:", shapeSize);
 
     if (dataView.categorical && dataView.categorical.categories && dataView.categorical.categories.length > 0) {
@@ -95,31 +95,29 @@ public drawChart(
 
 
     // Private method to draw shapes and labels for each data point
-    // QuadChart.ts
+    private drawShapesAndLabels(
+        width: number,
+        height: number,
+        shapeSettings: any,
+        categoryColumn: DataViewCategoryColumn,
+        measures: DataViewValueColumns,
+        shapeSize: number,
+        settings: any,
+        dataView: DataView
+    ): void {
+        const measureSettingsArray = [
+            settings.measure1Settings,
+            settings.measure2Settings,
+            settings.measure3Settings,
+            settings.measure4Settings
+        ];
 
-private drawShapesAndLabels(
-    width: number,
-    height: number,
-    shapeSettings: any,
-    categoryColumn: DataViewCategoryColumn,
-    measures: DataViewValueColumns,
-    shapeSize: number,
-    settings: any,
-    dataView: DataView
-): void {
-    const measureSettingsArray = [
-        settings.measure1Settings,
-        settings.measure2Settings,
-        settings.measure3Settings,
-        settings.measure4Settings
-    ];
+        const tooltipColumn = dataView.categorical.values.find(value => value.source.roles["tooltipMeasure"]);
 
-    const tooltipColumn = dataView.categorical.values.find(value => value.source.roles["tooltipMeasure"]);
-
-    categoryColumn.values.forEach((category, index) => {
-        const selectionId = this.host.createSelectionIdBuilder()
-            .withCategory(categoryColumn, index)
-            .createSelectionId();
+        categoryColumn.values.forEach((category, index) => {
+            const selectionId = this.host.createSelectionIdBuilder()
+                .withCategory(categoryColumn, index)
+                .createSelectionId();
 
         const measureValue = measures[0]?.values[index];
         const tooltipValue = tooltipColumn ? tooltipColumn.values[index] : null;
