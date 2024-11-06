@@ -11,6 +11,7 @@ import { FormattingService } from './formattingService'; // Custom formatting se
 import { VisualSettings } from './settings'; // Settings class for managing visual settings
 import { QuadChart } from './components/QuadChart'; // Component for drawing the chart
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel"; // Service for formatting settings
+import "../style/visual.less";
 
 // Main class that implements the custom Power BI visual
 export class Visual implements IVisual {

@@ -47,4 +47,16 @@ export class Separators {
             .attr('stroke', settings.color || 'black') // Line color, defaulting to black if not provided
             .attr('stroke-width', settings.width || 2); // Line width, defaulting to 2 if not provided
     }
+
+
+    public updateSeparators(width: number, height: number, settings: any): void {
+        // Remove any existing lines before drawing new ones to avoid duplicates
+        this.container.selectAll('line').remove();
+
+        // Draw the vertical line at the center of the container
+        this.drawVerticalLine(width / 2, height, settings);
+
+        // Draw the horizontal line at the center of the container
+        this.drawHorizontalLine(height / 2, width, settings);
+    }
 }

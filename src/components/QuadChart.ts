@@ -62,152 +62,143 @@ export class QuadChart {
     }
 
     // Main method to draw the chart with shapes, separators, and labels
-    public drawChart(
-        width: number, // Width of the chart
-        height: number, // Height of the chart
-        separatorSettings: any, // Settings for separators
-        shapeSettings: any, // Settings for shapes
-        dataView: DataView, // DataView containing chart data
-        settings: any // General settings for the chart
-    ): void {
-        console.log("Drawing chart with dimensions:", width, "x", height); // Log chart dimensions
+    // QuadChart.ts
 
-        // Clear the container before drawing new elements
-        this.container.selectAll('*').remove();
+public drawChart(
+    width: number,
+    height: number,
+    separatorSettings: any,
+    shapeSettings: any,
+    dataView: DataView,
+    settings: any
+): void {
+    console.log("Drawing chart with dimensions:", width, "x", height);
 
-        // Draw separators if the setting is enabled
-        if (separatorSettings.show) {
-            this.separators.drawVerticalLine(width / 2, height, separatorSettings); // Draw vertical line
-            this.separators.drawHorizontalLine(height / 2, width, separatorSettings, 10); // Draw horizontal line with offset
-            console.log("Separators drawn"); // Log message for debugging
-        }
+    // Clear the container before drawing new elements
+    this.container.selectAll('*').remove();
 
-        // Calculate size for shapes relative to chart dimensions
-        const shapeSize = Math.min(width, height) * 0.2;
-        console.log("Calculated shape size:", shapeSize); // Log calculated shape size
-
-        // Check if the DataView contains categories and values before drawing shapes
-        if (dataView.categorical && dataView.categorical.categories && dataView.categorical.categories.length > 0) {
-            const categoryColumn = dataView.categorical.categories[0]; // Get the category column
-            const measures = dataView.categorical.values; // Get the measure values
-            this.drawShapesAndLabels(width, height, shapeSettings, categoryColumn, measures, shapeSize, settings, dataView);
-        }
+    // Draw separators if the setting is enabled
+    if (separatorSettings.show) {
+        this.separators.updateSeparators(width, height, separatorSettings);
+        console.log("Separators drawn");
     }
+
+    const shapeSize = Math.min(width, height) * 0.2;
+    console.log("Calculated shape size:", shapeSize);
+
+    if (dataView.categorical && dataView.categorical.categories && dataView.categorical.categories.length > 0) {
+        const categoryColumn = dataView.categorical.categories[0];
+        const measures = dataView.categorical.values;
+        this.drawShapesAndLabels(width, height, shapeSettings, categoryColumn, measures, shapeSize, settings, dataView);
+    }
+}
+
 
     // Private method to draw shapes and labels for each data point
-    private drawShapesAndLabels(
-        width: number, // Width of the chart
-        height: number, // Height of the chart
-        shapeSettings: any, // Settings for shapes
-        categoryColumn: DataViewCategoryColumn, // Category column from DataView
-        measures: DataViewValueColumns, // Value columns from DataView
-        shapeSize: number, // Size of the shapes
-        settings: any, // General settings for the chart
-        dataView: DataView // DataView containing chart data
-    ): void {
-        // Array of measure settings for each measure column
-        const measureSettingsArray = [
-            settings.measure1Settings,
-            settings.measure2Settings,
-            settings.measure3Settings,
-            settings.measure4Settings
-        ];
+    // QuadChart.ts
 
-        // Extract tooltip data column if available
-        const tooltipColumn = dataView.categorical.values.find(value => value.source.roles["tooltipMeasure"]);
+private drawShapesAndLabels(
+    width: number,
+    height: number,
+    shapeSettings: any,
+    categoryColumn: DataViewCategoryColumn,
+    measures: DataViewValueColumns,
+    shapeSize: number,
+    settings: any,
+    dataView: DataView
+): void {
+    const measureSettingsArray = [
+        settings.measure1Settings,
+        settings.measure2Settings,
+        settings.measure3Settings,
+        settings.measure4Settings
+    ];
 
-        // Iterate over each category to draw shapes and labels
-        categoryColumn.values.forEach((category, index) => {
-            // Create a selection ID for each data point
-            const selectionId = this.host.createSelectionIdBuilder()
-                .withCategory(categoryColumn, index)
-                .createSelectionId();
+    const tooltipColumn = dataView.categorical.values.find(value => value.source.roles["tooltipMeasure"]);
 
-            // Get the measure value and tooltip value for the current index
-            const measureValue = measures[0]?.values[index]; // Adjust index based on measure logic
-            const tooltipValue = tooltipColumn ? tooltipColumn.values[index] : null; // Get tooltip value
-            const measureTitle = measures[index % measures.length]?.source.displayName || 'N/A'; // Get measure title
+    categoryColumn.values.forEach((category, index) => {
+        const selectionId = this.host.createSelectionIdBuilder()
+            .withCategory(categoryColumn, index)
+            .createSelectionId();
 
-            // Calculate the coordinates for placing the shape
-            const x = (index % 2) * width / 2 + width / 4;
-            const y = Math.floor(index / 2) * height / 2 + height / 4;
+        const measureValue = measures[0]?.values[index];
+        const tooltipValue = tooltipColumn ? tooltipColumn.values[index] : null;
+        const measureTitle = measures[index % measures.length]?.source.displayName || 'N/A';
 
-            // Create an object containing settings for the current measure
-            const measureSettings = {
-                ...measureSettingsArray[index % measureSettingsArray.length],
-                measureValue: measureValue, // Value of the current measure
-                objectName: `measure${(index % 4) + 1}Settings`, // Object name for measure settings
-                shapeType: shapeSettings.shapeType // Shape type from settings
-            };
+        // Calculate coordinates for shapes based on quadrant index
+        const x = (index % 2) * width / 2 + width / 4;
+        const y = Math.floor(index / 2) * height / 2 + height / 4;
 
-            console.log(`Drawing shape for measure title "${measureTitle}" at index ${index}:`, measureSettings.shapeType); // Log drawing details
+        const measureSettings = {
+            ...measureSettingsArray[index % measureSettingsArray.length],
+            measureValue: measureValue,
+            objectName: `measure${(index % 4) + 1}Settings`,
+            shapeType: shapeSettings.shapeType
+        };
 
-            // Draw the shape and bind event handlers
-            const shapeElement = this.shapeDrawer.drawShape(
-                x, // X-coordinate for shape
-                y, // Y-coordinate for shape
-                {
-                    type: measureSettings.shapeType || 'circle', // Shape type (default: circle)
-                    defaultColor: measureSettings.shapeFillColor || '#000000', // Default fill color
-                    defaultStroke: measureSettings.shapeStrokeColor || '#000000', // Default stroke color
-                    width: shapeSettings.shapeStrokeWidth || 2 // Stroke width
-                },
-                shapeSize, // Size of the shape
-                measureSettings, // Settings for the current measure
-                dataView // DataView for accessing metadata and data
-            );
+        console.log(`Drawing shape for measure title "${measureTitle}" at index ${index}:`, measureSettings.shapeType);
 
-            // Add context menu event handler to the shape
-            shapeElement.on('contextmenu', (event: MouseEvent) => {
-                event.preventDefault(); // Prevent default context menu
-                event.stopPropagation(); // Stop event propagation
-                this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY }); // Show custom context menu
-                console.log("Context menu triggered for measure title:", measureTitle); // Log message for debugging
-            });
+        const shapeElement = this.shapeDrawer.drawShape(
+            x,
+            y,
+            {
+                type: measureSettings.shapeType || 'circle',
+                defaultColor: measureSettings.shapeFillColor || '#000000',
+                defaultStroke: measureSettings.shapeStrokeColor || '#000000',
+                width: shapeSettings.shapeStrokeWidth || 2
+            },
+            shapeSize,
+            measureSettings,
+            dataView,
+            tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A'
+        );
 
-            // Add mouseover and mouseout event handlers for tooltips
-            shapeElement.on('mouseover', (event: MouseEvent) => {
-                const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A'; // Set tooltip text
-                this.tooltipService.showTooltip(tooltipText, event); // Show tooltip
-            }).on('mouseout', () => {
-                this.tooltipService.hideTooltip(); // Hide tooltip on mouse out
-            });
-
-            // Check if labels should be shown based on settings
-            if (shapeSettings.show) {
-                // Draw the label and bind event handlers
-                const labelElement = this.labelDrawer.drawLabel(
-                    x, // X-coordinate for label
-                    y, // Y-coordinate for label
-                    measureTitle, // Text for the label (measure title)
-                    shapeSettings.labelPosition, // Position of the label ('centered' or 'above')
-                    shapeSettings.font, // Font family for the label
-                    shapeSettings.fontSize, // Font size for the label
-                    measureSettings.labelFontColor || '#000000', // Font color for the label
-                    shapeSize, // Size of the associated shape
-                    measureSettings.shapeType, // Type of the shape
-                    measureSettings, // Settings for the current measure
-                    dataView // DataView for accessing metadata and data
-                ) as d3.Selection<SVGTextElement, unknown, HTMLElement, any>;
-
-                // Add context menu event handler to the label
-                if (labelElement) {
-                    labelElement.on('contextmenu', (event: MouseEvent) => {
-                        event.preventDefault(); // Prevent default context menu
-                        event.stopPropagation(); // Stop event propagation
-                        this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY }); // Show custom context menu
-                        console.log("Context menu triggered for measure title:", measureTitle, "from label"); // Log message for debugging
-                    });
-
-                    // Add mouseover and mouseout event handlers for tooltips on the label
-                    labelElement.on('mouseover', (event: MouseEvent) => {
-                        const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A'; // Set tooltip text
-                        this.tooltipService.showTooltip(tooltipText, event); // Show tooltip
-                    }).on('mouseout', () => {
-                        this.tooltipService.hideTooltip(); // Hide tooltip on mouse out
-                    });
-                }
-            }
+        shapeElement.on('contextmenu', (event: MouseEvent) => {
+            event.preventDefault();
+            event.stopPropagation();
+            this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+            console.log("Context menu triggered for measure title:", measureTitle);
         });
-    }
+
+        shapeElement.on('mouseover', (event: MouseEvent) => {
+            const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
+            this.tooltipService.showTooltip(tooltipText, event);
+        }).on('mouseout', () => {
+            this.tooltipService.hideTooltip();
+        });
+
+        if (shapeSettings.show) {
+            const labelElement = this.labelDrawer.drawLabel(
+                x,
+                y,
+                measureTitle,
+                shapeSettings.labelPosition,
+                shapeSettings.font,
+                shapeSettings.fontSize,
+                measureSettings.labelFontColor || '#000000',
+                shapeSize,
+                measureSettings.shapeType,
+                measureSettings,
+                dataView
+            ) as d3.Selection<SVGTextElement, unknown, HTMLElement, any>;
+
+            if (labelElement) {
+                labelElement.on('contextmenu', (event: MouseEvent) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+                    console.log("Context menu triggered for measure title:", measureTitle, "from label");
+                });
+
+                labelElement.on('mouseover', (event: MouseEvent) => {
+                    const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
+                    this.tooltipService.showTooltip(tooltipText, event);
+                }).on('mouseout', () => {
+                    this.tooltipService.hideTooltip();
+                });
+            }
+        }
+    });
+}
+
 }
