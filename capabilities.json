@@ -3,7 +3,7 @@
         {
             "name": "category",
             "displayName": "Category",
-            "kind": "Grouping"
+            "kind": "GroupingOrMeasure"
         },
         {
             "name": "shape1measure",
