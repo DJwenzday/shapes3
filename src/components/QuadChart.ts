@@ -123,13 +123,30 @@ public drawChart(
             const measureValue = measureColumn?.values[0] ?? 0;
             const tooltipValue = String(measureValue);
             const measureTitle = measureColumn?.source.displayName || 'N/A';
-            //const measureValue = measures[i] ? measures[i]?.values[i] : 0; // Use 0 if data is missing
-            //const tooltipValue = measureValue !== null && measureValue !== undefined ? String(measureValue) : 'N/A';
-            //const measureTitle = measures[i % measures.length]?.source.displayName || 'N/A';
-    
+           
             // Calculate coordinates for each shape based on quadrant index
             const x = (i % 2) * width / 2 + width / 4;
             const y = Math.floor(i / 2) * height / 2 + height / 4;
+
+            // Create transparent background for right-click in this quadrant
+            const quadrantWidth = width / 2;
+            const quadrantHeight = height / 2;
+            const quadrantX = (i % 2) * quadrantWidth;
+            const quadrantY = Math.floor(i / 2) * quadrantHeight;
+
+            this.container.append("rect")
+                .attr("x", quadrantX)
+                .attr("y", quadrantY)
+                .attr("width", quadrantWidth)
+                .attr("height", quadrantHeight)
+                .style("fill", "transparent")
+                .style("pointer-events", "all") // Enable capturing right-clicks
+                .on("contextmenu", (event: MouseEvent) => {
+            event.preventDefault();
+            this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+            console.log("Global quadrant context menu triggered for quadrant index:", i);
+        });
+
     
             // Create a selection ID for each data point
             const selectionId = this.host.createSelectionIdBuilder()
