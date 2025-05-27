@@ -112,16 +112,20 @@ public drawChart(
             settings.measure4Settings
         ];
     
-        const tooltipColumn = dataView.categorical.values.find(value => value.source.roles["tooltipMeasure"]);
+
     
         const maxQuadrants = 4; // Always draw for all four quadrants
     
         for (let i = 0; i < maxQuadrants; i++) {
             // Use placeholder if no category data is available
             const category = categoryColumn.values[i] || "Placeholder"; 
-            const measureValue = measures[i] ? measures[i]?.values[i] : 0; // Use 0 if data is missing
-            const tooltipValue = tooltipColumn ? tooltipColumn.values[i] : null;
-            const measureTitle = measures[i % measures.length]?.source.displayName || 'N/A';
+            const measureColumn = measures[i % measures.length]; // ensures wrap-around if fewer than 4 measures
+            const measureValue = measureColumn?.values[0] ?? 0;
+            const tooltipValue = String(measureValue);
+            const measureTitle = measureColumn?.source.displayName || 'N/A';
+            //const measureValue = measures[i] ? measures[i]?.values[i] : 0; // Use 0 if data is missing
+            //const tooltipValue = measureValue !== null && measureValue !== undefined ? String(measureValue) : 'N/A';
+            //const measureTitle = measures[i % measures.length]?.source.displayName || 'N/A';
     
             // Calculate coordinates for each shape based on quadrant index
             const x = (i % 2) * width / 2 + width / 4;

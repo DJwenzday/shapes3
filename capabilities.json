@@ -256,7 +256,7 @@
     "tooltips": {
         "roles": ["tooltipMeasure"],
         "supportEnhancedTooltips": true,
-        "supportedTypes": {"default": true}
+        "supportedTypes": { "default": true, "canvas": true }
     },
     "privileges": []
 }
