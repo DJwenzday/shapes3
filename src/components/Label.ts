@@ -69,6 +69,7 @@ export class Label {
             .attr('font-family', font) // Set font family
             .attr('font-size', `${fontSize}px`) // Set font size
             .attr('fill', fontColor) // Apply the font color
+            .style('cursor', 'pointer')
             .text(text); // Set the text content
 
         return labelElement; // Return the created label element

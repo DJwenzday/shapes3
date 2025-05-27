@@ -61,7 +61,8 @@ export class Shape {
                     .attr('r', shapeSize / 2)
                     .attr('fill', fillColor)
                     .attr('stroke', strokeColor)
-                    .attr('stroke-width', strokeWidth);
+                    .attr('stroke-width', strokeWidth)
+                    .style('cursor', 'pointer');;
                 break;
             case 'square':
                 shapeElement = this.container.append('rect')
@@ -71,14 +72,16 @@ export class Shape {
                     .attr('height', shapeSize)
                     .attr('fill', fillColor)
                     .attr('stroke', strokeColor)
-                    .attr('stroke-width', strokeWidth);
+                    .attr('stroke-width', strokeWidth)
+                    .style('cursor', 'pointer');;
                 break;
             case 'triangle':
                 shapeElement = this.container.append('polygon')
                     .attr('points', `${x},${y - shapeSize / 2} ${x - shapeSize / 2},${y + shapeSize / 2} ${x + shapeSize / 2},${y + shapeSize / 2}`)
                     .attr('fill', fillColor)
                     .attr('stroke', strokeColor)
-                    .attr('stroke-width', strokeWidth);
+                    .attr('stroke-width', strokeWidth)
+                    .style('cursor', 'pointer');;
                 break;
             default:
                 console.error('Invalid shape type:', shapeType);

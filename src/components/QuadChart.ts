@@ -164,6 +164,7 @@ export class QuadChart {
                 .attr("height", quadrantHeight)
                 .style("fill", "transparent")
                 .style("pointer-events", "all")
+                .style('cursor', 'context-menu')
                 .on("contextmenu", (event: MouseEvent) => {
                     event.preventDefault();
                     if (selectionId) {
