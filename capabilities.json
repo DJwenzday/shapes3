@@ -3,7 +3,7 @@
         {
             "name": "category",
             "displayName": "Category",
-            "kind": "Grouping"
+            "kind": "GroupingOrMeasure"
         },
         {
             "name": "shape1measure",
@@ -36,7 +36,7 @@
         {
             "conditions": [
                 {
-                    "category": { "max": 1},
+                    "category": { "max": 75},
                     "shape1measure": { "max": 1 },
                     "shape2measure": { "max": 1 },
                     "shape3measure": { "max": 1 },

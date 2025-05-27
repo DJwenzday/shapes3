@@ -111,92 +111,98 @@ public drawChart(
             settings.measure3Settings,
             settings.measure4Settings
         ];
-
+    
         const tooltipColumn = dataView.categorical.values.find(value => value.source.roles["tooltipMeasure"]);
-
-        categoryColumn.values.forEach((category, index) => {
+    
+        const maxQuadrants = 4; // Always draw for all four quadrants
+    
+        for (let i = 0; i < maxQuadrants; i++) {
+            // Use placeholder if no category data is available
+            const category = categoryColumn.values[i] || "Placeholder"; 
+            const measureValue = measures[i] ? measures[i]?.values[i] : 0; // Use 0 if data is missing
+            const tooltipValue = tooltipColumn ? tooltipColumn.values[i] : null;
+            const measureTitle = measures[i % measures.length]?.source.displayName || 'N/A';
+    
+            // Calculate coordinates for each shape based on quadrant index
+            const x = (i % 2) * width / 2 + width / 4;
+            const y = Math.floor(i / 2) * height / 2 + height / 4;
+    
+            // Create a selection ID for each data point
             const selectionId = this.host.createSelectionIdBuilder()
-                .withCategory(categoryColumn, index)
+                .withCategory(categoryColumn, i)
                 .createSelectionId();
-
-        const measureValue = measures[0]?.values[index];
-        const tooltipValue = tooltipColumn ? tooltipColumn.values[index] : null;
-        const measureTitle = measures[index % measures.length]?.source.displayName || 'N/A';
-
-        // Calculate coordinates for shapes based on quadrant index
-        const x = (index % 2) * width / 2 + width / 4;
-        const y = Math.floor(index / 2) * height / 2 + height / 4;
-
-        const measureSettings = {
-            ...measureSettingsArray[index % measureSettingsArray.length],
-            measureValue: measureValue,
-            objectName: `measure${(index % 4) + 1}Settings`,
-            shapeType: shapeSettings.shapeType
-        };
-
-        console.log(`Drawing shape for measure title "${measureTitle}" at index ${index}:`, measureSettings.shapeType);
-
-        const shapeElement = this.shapeDrawer.drawShape(
-            x,
-            y,
-            {
-                type: measureSettings.shapeType || 'circle',
-                defaultColor: measureSettings.shapeFillColor || '#000000',
-                defaultStroke: measureSettings.shapeStrokeColor || '#000000',
-                width: shapeSettings.shapeStrokeWidth || 2
-            },
-            shapeSize,
-            measureSettings,
-            dataView,
-            tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A'
-        );
-
-        shapeElement.on('contextmenu', (event: MouseEvent) => {
-            event.preventDefault();
-            event.stopPropagation();
-            this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
-            console.log("Context menu triggered for measure title:", measureTitle);
-        });
-
-        shapeElement.on('mouseover', (event: MouseEvent) => {
-            const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
-            this.tooltipService.showTooltip(tooltipText, event);
-        }).on('mouseout', () => {
-            this.tooltipService.hideTooltip();
-        });
-
-        if (shapeSettings.show) {
-            const labelElement = this.labelDrawer.drawLabel(
+    
+            const measureSettings = {
+                ...measureSettingsArray[i % measureSettingsArray.length],
+                measureValue: measureValue,
+                objectName: `measure${(i % 4) + 1}Settings`,
+                shapeType: shapeSettings.shapeType
+            };
+    
+            console.log(`Drawing shape for measure title "${measureTitle}" at index ${i}:`, measureSettings.shapeType);
+    
+            // Draw the shape for each quadrant, even if data is missing
+            const shapeElement = this.shapeDrawer.drawShape(
                 x,
                 y,
-                measureTitle,
-                shapeSettings.labelPosition,
-                shapeSettings.font,
-                shapeSettings.fontSize,
-                measureSettings.labelFontColor || '#000000',
+                {
+                    type: measureSettings.shapeType || 'circle',
+                    defaultColor: measureSettings.shapeFillColor || '#cccccc', // Fallback color for missing data
+                    defaultStroke: measureSettings.shapeStrokeColor || '#000000',
+                    width: shapeSettings.shapeStrokeWidth || 2
+                },
                 shapeSize,
-                measureSettings.shapeType,
                 measureSettings,
-                dataView
-            ) as d3.Selection<SVGTextElement, unknown, HTMLElement, any>;
-
-            if (labelElement) {
-                labelElement.on('contextmenu', (event: MouseEvent) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
-                    console.log("Context menu triggered for measure title:", measureTitle, "from label");
-                });
-
-                labelElement.on('mouseover', (event: MouseEvent) => {
-                    const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
-                    this.tooltipService.showTooltip(tooltipText, event);
-                }).on('mouseout', () => {
-                    this.tooltipService.hideTooltip();
-                });
+                dataView,
+                tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A'
+            );
+    
+            // Add event handlers for interaction
+            shapeElement.on('contextmenu', (event: MouseEvent) => {
+                event.preventDefault();
+                this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+                console.log("Context menu triggered for measure title:", measureTitle);
+            });
+    
+            shapeElement.on('mouseover', (event: MouseEvent) => {
+                const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
+                this.tooltipService.showTooltip(tooltipText, event);
+            }).on('mouseout', () => {
+                this.tooltipService.hideTooltip();
+            });
+    
+            // Draw label for the shape if the settings allow for it
+            if (shapeSettings.show) {
+                const labelElement = this.labelDrawer.drawLabel(
+                    x,
+                    y,
+                    measureTitle,
+                    shapeSettings.labelPosition,
+                    shapeSettings.font,
+                    shapeSettings.fontSize,
+                    measureSettings.labelFontColor || '#000000',
+                    shapeSize,
+                    measureSettings.shapeType,
+                    measureSettings,
+                    dataView
+                ) as d3.Selection<SVGTextElement, unknown, HTMLElement, any>;
+    
+                if (labelElement) {
+                    labelElement.on('contextmenu', (event: MouseEvent) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+                        console.log("Context menu triggered for measure title:", measureTitle, "from label");
+                    });
+    
+                    labelElement.on('mouseover', (event: MouseEvent) => {
+                        const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
+                        this.tooltipService.showTooltip(tooltipText, event);
+                    }).on('mouseout', () => {
+                        this.tooltipService.hideTooltip();
+                    });
+                }
             }
         }
-    });
-}
-
-}
+    }    
+}    
