@@ -13,8 +13,10 @@ import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import DataView = powerbi.DataView;
 import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
 import DataViewValueColumns = powerbi.DataViewValueColumns;
+import { createTooltipServiceWrapper, ITooltipServiceWrapper, TooltipEventArgs } from "powerbi-visuals-utils-tooltiputils";
 
 export class QuadChart {
+    private tooltipServiceWrapper: ITooltipServiceWrapper;
     private container: d3.Selection<SVGElement, unknown, HTMLElement, any>;
     private separators: Separators;
     private shapeDrawer: Shape;
@@ -32,27 +34,7 @@ export class QuadChart {
         this.tooltipService = new TooltipService();
         this.selectionManager = selectionManager;
         this.host = host;
-        console.log("QuadChart initialized");
-    }
-
-    public draw(data: any[]): void {
-        this.data = data;
-        this.container.selectAll('circle')
-            .data(data)
-            .join('circle')
-            .attr('cx', d => d.x)
-            .attr('cy', d => d.y)
-            .attr('r', 20)
-            .style('fill', d => d.color)
-            .on('contextmenu', (event, d) => {
-                event.preventDefault();
-                if (d.selectionId) {
-                    this.selectionManager.showContextMenu(d.selectionId, {
-                        x: event.clientX,
-                        y: event.clientY
-                    });
-                }
-            });
+        this.tooltipServiceWrapper = createTooltipServiceWrapper(this.host.tooltipService, container.node());
     }
 
     public drawChart(
@@ -74,7 +56,9 @@ export class QuadChart {
         if (dataView.categorical && dataView.categorical.categories?.length > 0) {
             const categoryColumn = dataView.categorical.categories[0];
             const measures = dataView.categorical.values;
-            this.drawShapesAndLabels(width, height, shapeSettings, categoryColumn, measures, shapeSize, settings, dataView);
+            const tooltipColumns = dataView.categorical.values
+    .filter(col => col.source.roles?.tooltips) as powerbi.DataViewValueColumns;
+            this.drawShapesAndLabels(width, height, shapeSettings, categoryColumn, measures, tooltipColumns, shapeSize, settings, dataView);
         }
     }
 
@@ -84,6 +68,7 @@ export class QuadChart {
         shapeSettings: any,
         categoryColumn: DataViewCategoryColumn,
         measures: DataViewValueColumns,
+        tooltipColumns: DataViewValueColumns,
         shapeSize: number,
         settings: VisualSettings,
         dataView: DataView
@@ -98,15 +83,10 @@ export class QuadChart {
         for (let i = 0; i < 4; i++) {
             const measureColumn = measures[i % measures.length];
             const measureValue = measureColumn?.values[0] ?? 0;
-            const tooltipValue = String(measureValue);
             const measureTitle = measureColumn?.source.displayName || 'N/A';
 
             let selectionId: ISelectionId = null;
-            if (measureColumn?.source?.queryName) {
-                selectionId = this.host.createSelectionIdBuilder()
-                    .withMeasure(measureColumn.source.queryName)
-                    .createSelectionId();
-            } else if (categoryColumn?.values?.length > i) {
+            if (categoryColumn?.values?.length > i) {
                 selectionId = this.host.createSelectionIdBuilder()
                     .withCategory(categoryColumn, i)
                     .createSelectionId();
@@ -134,46 +114,35 @@ export class QuadChart {
                 shapeSize,
                 measureSettings,
                 dataView,
-                tooltipValue
+                String(measureValue)
+            );
+
+            const tooltipDataItems = [
+                {
+                    displayName: measureTitle,
+                    value: String(measureValue)
+                },
+                ...tooltipColumns.map(col => ({
+                    displayName: col.source.displayName,
+                    value: String(col.values[i])
+                }))
+            ];
+
+            this.tooltipServiceWrapper.addTooltip(
+                shapeElement,
+                () => tooltipDataItems,
+                () => selectionId
             );
 
             shapeElement.on('contextmenu', (event: MouseEvent) => {
                 event.preventDefault();
                 if (selectionId) {
-                    this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+                    this.selectionManager.showContextMenu(selectionId, {
+                        x: event.clientX,
+                        y: event.clientY
+                    });
                 }
             });
-
-            if (settings.tooltipSettings?.show) {
-                shapeElement.on('mouseover', (event: MouseEvent) => {
-                    this.tooltipService.showTooltip(tooltipValue, event);
-                }).on('mouseout', () => {
-                    this.tooltipService.hideTooltip();
-                });
-            }
-
-            const quadrantWidth = width / 2;
-            const quadrantHeight = height / 2;
-            const quadrantX = (i % 2) * quadrantWidth;
-            const quadrantY = Math.floor(i / 2) * quadrantHeight;
-
-            this.container.append("rect")
-                .attr("x", quadrantX)
-                .attr("y", quadrantY)
-                .attr("width", quadrantWidth)
-                .attr("height", quadrantHeight)
-                .style("fill", "transparent")
-                .style("pointer-events", "all")
-                .style('cursor', 'context-menu')
-                .on("contextmenu", (event: MouseEvent) => {
-                    event.preventDefault();
-                    if (selectionId) {
-                        this.selectionManager.showContextMenu(selectionId, {
-                            x: event.clientX,
-                            y: event.clientY
-                        });
-                    }
-                });
 
             if (shapeSettings.show) {
                 const labelElement = this.labelDrawer.drawLabel(
@@ -200,14 +169,6 @@ export class QuadChart {
                                 y: event.clientY
                             });
                         }
-                    });
-
-                    labelElement.on('mouseover', (event: MouseEvent) => {
-                        if (settings.tooltipSettings?.show) {
-                            this.tooltipService.showTooltip(tooltipValue, event);
-                        }
-                    }).on('mouseout', () => {
-                        this.tooltipService.hideTooltip();
                     });
                 }
             }

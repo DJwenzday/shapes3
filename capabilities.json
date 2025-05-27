@@ -24,6 +24,11 @@
             "name": "shape4measure",
             "displayName": "Shape4 Measure",
             "kind": "Measure"
+        },
+        {
+            "name": "tooltips",
+            "displayName": "Tooltips",
+            "kind": "Measure"
         }
     ],
 
@@ -248,9 +253,13 @@
         "default": {}
     },
     "tooltips": {
-        "roles": [],
+        "roles": ["tooltips"],
         "supportEnhancedTooltips": true,
         "supportedTypes": { "default": true, "canvas": true }
     },
+    "supportsHighlight": true,
+    "keepAllMetadataColumns": true,
+    "supportsLandingPage": true,
+    "supportsMultiVisualSelection": true,
     "privileges": []
 }

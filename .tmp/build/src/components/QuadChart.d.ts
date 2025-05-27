@@ -5,6 +5,7 @@ import ISelectionManager = powerbi.extensibility.ISelectionManager;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import DataView = powerbi.DataView;
 export declare class QuadChart {
+    private tooltipServiceWrapper;
     private container;
     private separators;
     private shapeDrawer;
@@ -14,7 +15,6 @@ export declare class QuadChart {
     private host;
     private data;
     constructor(container: d3.Selection<SVGElement, unknown, HTMLElement, any>, selectionManager: ISelectionManager, host: IVisualHost);
-    draw(data: any[]): void;
     drawChart(width: number, height: number, separatorSettings: any, shapeSettings: any, dataView: DataView, settings: VisualSettings): void;
     private drawShapesAndLabels;
 }
