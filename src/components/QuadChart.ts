@@ -52,6 +52,7 @@ export class QuadChart {
             .on('contextmenu', (event, d) => {
                 event.preventDefault(); // Prevent default context menu
                 if (d.selectionId) { // Check if a selection ID is present
+                    
                     this.selectionManager.showContextMenu(d.selectionId, {
                         x: event.clientX,
                         y: event.clientY
@@ -118,8 +119,27 @@ public drawChart(
     
         for (let i = 0; i < maxQuadrants; i++) {
             // Use placeholder if no category data is available
-            const category = categoryColumn.values[i] || "Placeholder"; 
-            const measureColumn = measures[i % measures.length]; // ensures wrap-around if fewer than 4 measures
+            //const category = categoryColumn.values[i] || "Placeholder"; 
+            const measureColumn = measures[i % measures.length]; // already defined earlier
+let selectionId: ISelectionId;
+
+if (measureColumn && measureColumn.source?.queryName) {
+    selectionId = this.host.createSelectionIdBuilder()
+        .withMeasure(measureColumn.source.queryName)
+        .createSelectionId();
+} else if (categoryColumn && categoryColumn.values.length > i) {
+    selectionId = this.host.createSelectionIdBuilder()
+        .withCategory(categoryColumn, i)
+        .createSelectionId();
+} else {
+    selectionId = null;
+}
+
+
+
+
+
+            //const measureColumn = measures[i % measures.length]; // ensures wrap-around if fewer than 4 measures
             const measureValue = measureColumn?.values[0] ?? 0;
             const tooltipValue = String(measureValue);
             const measureTitle = measureColumn?.source.displayName || 'N/A';
@@ -128,30 +148,36 @@ public drawChart(
             const x = (i % 2) * width / 2 + width / 4;
             const y = Math.floor(i / 2) * height / 2 + height / 4;
 
-            // Create transparent background for right-click in this quadrant
+            // Add transparent background rectangle for right-click anywhere in the quadrant
             const quadrantWidth = width / 2;
             const quadrantHeight = height / 2;
             const quadrantX = (i % 2) * quadrantWidth;
             const quadrantY = Math.floor(i / 2) * quadrantHeight;
 
+            // Append a transparent rectangle that covers this quadrant
             this.container.append("rect")
                 .attr("x", quadrantX)
                 .attr("y", quadrantY)
                 .attr("width", quadrantWidth)
                 .attr("height", quadrantHeight)
                 .style("fill", "transparent")
-                .style("pointer-events", "all") // Enable capturing right-clicks
+                .style("pointer-events", "all")
                 .on("contextmenu", (event: MouseEvent) => {
             event.preventDefault();
-            this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
-            console.log("Global quadrant context menu triggered for quadrant index:", i);
-        });
+            if (selectionId) {
+            this.selectionManager.showContextMenu(selectionId, {
+            x: event.clientX,
+            y: event.clientY
+            });}
+        console.log("Context menu triggered for quadrant:", i, "selectionId:", selectionId);
+    });
+;
 
     
             // Create a selection ID for each data point
-            const selectionId = this.host.createSelectionIdBuilder()
-                .withCategory(categoryColumn, i)
-                .createSelectionId();
+            //const selectionId = this.host.createSelectionIdBuilder()
+            //    .withCategory(categoryColumn, i)
+            //    .createSelectionId();
     
             const measureSettings = {
                 ...measureSettingsArray[i % measureSettingsArray.length],
@@ -181,9 +207,10 @@ public drawChart(
             // Add event handlers for interaction
             shapeElement.on('contextmenu', (event: MouseEvent) => {
                 event.preventDefault();
+                if (selectionId) {
                 this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
                 console.log("Context menu triggered for measure title:", measureTitle);
-            });
+            }});
     
             shapeElement.on('mouseover', (event: MouseEvent) => {
                 const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
@@ -212,9 +239,10 @@ public drawChart(
                     labelElement.on('contextmenu', (event: MouseEvent) => {
                         event.preventDefault();
                         event.stopPropagation();
+                        if (selectionId) {
                         this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
                         console.log("Context menu triggered for measure title:", measureTitle, "from label");
-                    });
+                    }});
     
                     labelElement.on('mouseover', (event: MouseEvent) => {
                         const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
