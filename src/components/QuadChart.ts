@@ -1,101 +1,83 @@
-//QuadChart.ts
+// QuadChart.ts
 
-// Import necessary libraries and components for building the visual
-import * as d3 from 'd3'; // D3.js library for data visualization
-import { Separators } from './Separators'; // Module for drawing separator lines
-import { Shape } from './Shape'; // Module for drawing shapes
-import { Label } from './Label'; // Module for drawing labels
-import { TooltipService } from '../services/tooltipService'; // Custom service for handling tooltips
-import powerbi from 'powerbi-visuals-api'; // Power BI API for building custom visuals
-import ISelectionManager = powerbi.extensibility.ISelectionManager; // Interface for handling selection
-import ISelectionId = powerbi.visuals.ISelectionId; // Interface for selection IDs
-import IVisualHost = powerbi.extensibility.visual.IVisualHost; // Interface for visual host
-import DataView = powerbi.DataView; // Interface for Power BI DataView
-import DataViewCategoryColumn = powerbi.DataViewCategoryColumn; // Interface for category columns in DataView
-import DataViewValueColumns = powerbi.DataViewValueColumns; // Interface for value columns in DataView
+import { VisualSettings } from "../settings";
+import * as d3 from 'd3';
+import { Separators } from './Separators';
+import { Shape } from './Shape';
+import { Label } from './Label';
+import { TooltipService } from '../services/tooltipService';
+import powerbi from 'powerbi-visuals-api';
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
+import ISelectionId = powerbi.visuals.ISelectionId;
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import DataView = powerbi.DataView;
+import DataViewCategoryColumn = powerbi.DataViewCategoryColumn;
+import DataViewValueColumns = powerbi.DataViewValueColumns;
 
-// Class that handles the creation and rendering of the Quad Chart
 export class QuadChart {
-    private container: d3.Selection<SVGElement, unknown, HTMLElement, any>; // Main SVG container for the chart
-    private separators: Separators; // Instance for drawing separators
-    private shapeDrawer: Shape; // Instance for drawing shapes
-    private labelDrawer: Label; // Instance for drawing labels
-    private tooltipService: TooltipService; // Instance for managing tooltips
-    private selectionManager: ISelectionManager; // Manager for selection handling
-    private host: IVisualHost; // Host interface for Power BI visual interactions
-    private data: any[]; // Array to hold data for rendering
+    private container: d3.Selection<SVGElement, unknown, HTMLElement, any>;
+    private separators: Separators;
+    private shapeDrawer: Shape;
+    private labelDrawer: Label;
+    private tooltipService: TooltipService;
+    private selectionManager: ISelectionManager;
+    private host: IVisualHost;
+    private data: any[];
 
-    // Constructor to initialize the QuadChart with container, selection manager, and host
     constructor(container: d3.Selection<SVGElement, unknown, HTMLElement, any>, selectionManager: ISelectionManager, host: IVisualHost) {
-        this.container = container; // Assign the SVG container
-        this.separators = new Separators(container); // Initialize separators instance
-        this.shapeDrawer = new Shape(container); // Initialize shape drawer instance
-        this.labelDrawer = new Label(container); // Initialize label drawer instance
-        this.tooltipService = new TooltipService(); // Initialize tooltip service
-        this.selectionManager = selectionManager; // Assign selection manager
-        this.host = host; // Assign visual host
-        console.log("QuadChart initialized"); // Log message for debugging
+        this.container = container;
+        this.separators = new Separators(container);
+        this.shapeDrawer = new Shape(container);
+        this.labelDrawer = new Label(container);
+        this.tooltipService = new TooltipService();
+        this.selectionManager = selectionManager;
+        this.host = host;
+        console.log("QuadChart initialized");
     }
 
-    // Method to draw basic circles based on the provided data
     public draw(data: any[]): void {
-        this.data = data; // Store the data in the instance
-
-        // Bind data to circle elements and set their properties
+        this.data = data;
         this.container.selectAll('circle')
             .data(data)
             .join('circle')
-            .attr('cx', d => d.x) // Set x-coordinate
-            .attr('cy', d => d.y) // Set y-coordinate
-            .attr('r', 20) // Set radius (example value)
-            .style('fill', d => d.color) // Set fill color based on data
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('r', 20)
+            .style('fill', d => d.color)
             .on('contextmenu', (event, d) => {
-                event.preventDefault(); // Prevent default context menu
-                if (d.selectionId) { // Check if a selection ID is present
-                    
+                event.preventDefault();
+                if (d.selectionId) {
                     this.selectionManager.showContextMenu(d.selectionId, {
                         x: event.clientX,
                         y: event.clientY
                     });
-                    console.log('Context menu triggered for:', d.selectionId); // Log selection ID for debugging
                 }
             });
     }
 
-    // Main method to draw the chart with shapes, separators, and labels
-    // QuadChart.ts
+    public drawChart(
+        width: number,
+        height: number,
+        separatorSettings: any,
+        shapeSettings: any,
+        dataView: DataView,
+        settings: VisualSettings
+    ): void {
+        this.container.selectAll('*').remove();
 
-public drawChart(
-    width: number,
-    height: number,
-    separatorSettings: any,
-    shapeSettings: any,
-    dataView: DataView,
-    settings: any
-): void {
-    console.log("Drawing chart with dimensions:", width, "x", height);
+        if (separatorSettings.show) {
+            this.separators.updateSeparators(width, height, separatorSettings);
+        }
 
-    // Clear the container before drawing new elements
-    this.container.selectAll('*').remove();
+        const shapeSize = Math.min(width, height) * 0.3;
 
-    // Draw separators if the setting is enabled
-    if (separatorSettings.show) {
-        this.separators.updateSeparators(width, height, separatorSettings);
-        console.log("Separators drawn");
+        if (dataView.categorical && dataView.categorical.categories?.length > 0) {
+            const categoryColumn = dataView.categorical.categories[0];
+            const measures = dataView.categorical.values;
+            this.drawShapesAndLabels(width, height, shapeSettings, categoryColumn, measures, shapeSize, settings, dataView);
+        }
     }
 
-    const shapeSize = Math.min(width, height) * 0.3;
-    console.log("Calculated shape size:", shapeSize);
-
-    if (dataView.categorical && dataView.categorical.categories && dataView.categorical.categories.length > 0) {
-        const categoryColumn = dataView.categorical.categories[0];
-        const measures = dataView.categorical.values;
-        this.drawShapesAndLabels(width, height, shapeSettings, categoryColumn, measures, shapeSize, settings, dataView);
-    }
-}
-
-
-    // Private method to draw shapes and labels for each data point
     private drawShapesAndLabels(
         width: number,
         height: number,
@@ -103,7 +85,7 @@ public drawChart(
         categoryColumn: DataViewCategoryColumn,
         measures: DataViewValueColumns,
         shapeSize: number,
-        settings: any,
+        settings: VisualSettings,
         dataView: DataView
     ): void {
         const measureSettingsArray = [
@@ -112,49 +94,69 @@ public drawChart(
             settings.measure3Settings,
             settings.measure4Settings
         ];
-    
 
-    
-        const maxQuadrants = 4; // Always draw for all four quadrants
-    
-        for (let i = 0; i < maxQuadrants; i++) {
-            // Use placeholder if no category data is available
-            //const category = categoryColumn.values[i] || "Placeholder"; 
-            const measureColumn = measures[i % measures.length]; // already defined earlier
-let selectionId: ISelectionId;
-
-if (measureColumn && measureColumn.source?.queryName) {
-    selectionId = this.host.createSelectionIdBuilder()
-        .withMeasure(measureColumn.source.queryName)
-        .createSelectionId();
-} else if (categoryColumn && categoryColumn.values.length > i) {
-    selectionId = this.host.createSelectionIdBuilder()
-        .withCategory(categoryColumn, i)
-        .createSelectionId();
-} else {
-    selectionId = null;
-}
-
-
-
-
-
-            //const measureColumn = measures[i % measures.length]; // ensures wrap-around if fewer than 4 measures
+        for (let i = 0; i < 4; i++) {
+            const measureColumn = measures[i % measures.length];
             const measureValue = measureColumn?.values[0] ?? 0;
             const tooltipValue = String(measureValue);
             const measureTitle = measureColumn?.source.displayName || 'N/A';
-           
-            // Calculate coordinates for each shape based on quadrant index
+
+            let selectionId: ISelectionId = null;
+            if (measureColumn?.source?.queryName) {
+                selectionId = this.host.createSelectionIdBuilder()
+                    .withMeasure(measureColumn.source.queryName)
+                    .createSelectionId();
+            } else if (categoryColumn?.values?.length > i) {
+                selectionId = this.host.createSelectionIdBuilder()
+                    .withCategory(categoryColumn, i)
+                    .createSelectionId();
+            }
+
             const x = (i % 2) * width / 2 + width / 4;
             const y = Math.floor(i / 2) * height / 2 + height / 4;
 
-            // Add transparent background rectangle for right-click anywhere in the quadrant
+            const measureSettings = {
+                ...measureSettingsArray[i % measureSettingsArray.length],
+                measureValue,
+                objectName: `measure${(i % 4) + 1}Settings`,
+                shapeType: shapeSettings.shapeType
+            };
+
+            const shapeElement = this.shapeDrawer.drawShape(
+                x,
+                y,
+                {
+                    type: measureSettings.shapeType || 'circle',
+                    defaultColor: measureSettings.shapeFillColor || '#cccccc',
+                    defaultStroke: measureSettings.shapeStrokeColor || '#000000',
+                    width: shapeSettings.shapeStrokeWidth || 2
+                },
+                shapeSize,
+                measureSettings,
+                dataView,
+                tooltipValue
+            );
+
+            shapeElement.on('contextmenu', (event: MouseEvent) => {
+                event.preventDefault();
+                if (selectionId) {
+                    this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
+                }
+            });
+
+            if (settings.tooltipSettings?.show) {
+                shapeElement.on('mouseover', (event: MouseEvent) => {
+                    this.tooltipService.showTooltip(tooltipValue, event);
+                }).on('mouseout', () => {
+                    this.tooltipService.hideTooltip();
+                });
+            }
+
             const quadrantWidth = width / 2;
             const quadrantHeight = height / 2;
             const quadrantX = (i % 2) * quadrantWidth;
             const quadrantY = Math.floor(i / 2) * quadrantHeight;
 
-            // Append a transparent rectangle that covers this quadrant
             this.container.append("rect")
                 .attr("x", quadrantX)
                 .attr("y", quadrantY)
@@ -163,63 +165,15 @@ if (measureColumn && measureColumn.source?.queryName) {
                 .style("fill", "transparent")
                 .style("pointer-events", "all")
                 .on("contextmenu", (event: MouseEvent) => {
-            event.preventDefault();
-            if (selectionId) {
-            this.selectionManager.showContextMenu(selectionId, {
-            x: event.clientX,
-            y: event.clientY
-            });}
-        console.log("Context menu triggered for quadrant:", i, "selectionId:", selectionId);
-    });
-;
+                    event.preventDefault();
+                    if (selectionId) {
+                        this.selectionManager.showContextMenu(selectionId, {
+                            x: event.clientX,
+                            y: event.clientY
+                        });
+                    }
+                });
 
-    
-            // Create a selection ID for each data point
-            //const selectionId = this.host.createSelectionIdBuilder()
-            //    .withCategory(categoryColumn, i)
-            //    .createSelectionId();
-    
-            const measureSettings = {
-                ...measureSettingsArray[i % measureSettingsArray.length],
-                measureValue: measureValue,
-                objectName: `measure${(i % 4) + 1}Settings`,
-                shapeType: shapeSettings.shapeType
-            };
-    
-            console.log(`Drawing shape for measure title "${measureTitle}" at index ${i}:`, measureSettings.shapeType);
-    
-            // Draw the shape for each quadrant, even if data is missing
-            const shapeElement = this.shapeDrawer.drawShape(
-                x,
-                y,
-                {
-                    type: measureSettings.shapeType || 'circle',
-                    defaultColor: measureSettings.shapeFillColor || '#cccccc', // Fallback color for missing data
-                    defaultStroke: measureSettings.shapeStrokeColor || '#000000',
-                    width: shapeSettings.shapeStrokeWidth || 2
-                },
-                shapeSize,
-                measureSettings,
-                dataView,
-                tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A'
-            );
-    
-            // Add event handlers for interaction
-            shapeElement.on('contextmenu', (event: MouseEvent) => {
-                event.preventDefault();
-                if (selectionId) {
-                this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
-                console.log("Context menu triggered for measure title:", measureTitle);
-            }});
-    
-            shapeElement.on('mouseover', (event: MouseEvent) => {
-                const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
-                this.tooltipService.showTooltip(tooltipText, event);
-            }).on('mouseout', () => {
-                this.tooltipService.hideTooltip();
-            });
-    
-            // Draw label for the shape if the settings allow for it
             if (shapeSettings.show) {
                 const labelElement = this.labelDrawer.drawLabel(
                     x,
@@ -233,25 +187,29 @@ if (measureColumn && measureColumn.source?.queryName) {
                     measureSettings.shapeType,
                     measureSettings,
                     dataView
-                ) as d3.Selection<SVGTextElement, unknown, HTMLElement, any>;
-    
+                );
+
                 if (labelElement) {
                     labelElement.on('contextmenu', (event: MouseEvent) => {
                         event.preventDefault();
                         event.stopPropagation();
                         if (selectionId) {
-                        this.selectionManager.showContextMenu(selectionId, { x: event.clientX, y: event.clientY });
-                        console.log("Context menu triggered for measure title:", measureTitle, "from label");
-                    }});
-    
+                            this.selectionManager.showContextMenu(selectionId, {
+                                x: event.clientX,
+                                y: event.clientY
+                            });
+                        }
+                    });
+
                     labelElement.on('mouseover', (event: MouseEvent) => {
-                        const tooltipText = tooltipValue !== null && tooltipValue !== undefined ? String(tooltipValue) : 'N/A';
-                        this.tooltipService.showTooltip(tooltipText, event);
+                        if (settings.tooltipSettings?.show) {
+                            this.tooltipService.showTooltip(tooltipValue, event);
+                        }
                     }).on('mouseout', () => {
                         this.tooltipService.hideTooltip();
                     });
                 }
             }
         }
-    }    
-}    
+    }
+}

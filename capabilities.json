@@ -24,11 +24,6 @@
             "name": "shape4measure",
             "displayName": "Shape4 Measure",
             "kind": "Measure"
-        },
-        {
-            "name": "tooltipMeasure",
-            "displayName": "Tooltip",
-            "kind": "Measure"
         }
     ],
 
@@ -52,8 +47,7 @@
                         { "bind": { "to": "shape1measure" } },
                         { "bind": { "to": "shape2measure" } },
                         { "bind": { "to": "shape3measure" } },
-                        { "bind": { "to": "shape4measure" } },
-                        { "bind": { "to": "tooltipMeasure" } }
+                        { "bind": { "to": "shape4measure" } }
 
                     ]
                 }
@@ -254,7 +248,7 @@
         "default": {}
     },
     "tooltips": {
-        "roles": ["tooltipMeasure"],
+        "roles": [],
         "supportEnhancedTooltips": true,
         "supportedTypes": { "default": true, "canvas": true }
     },
