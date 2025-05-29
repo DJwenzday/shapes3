@@ -250,7 +250,7 @@
         "roles": []
     },
     "sorting": {
-        "default": {}
+        "default": {}, "custom": {}
     },
     "tooltips": {
         "roles": ["tooltips"],
@@ -258,6 +258,11 @@
         "supportedTypes": { "default": true, "canvas": true }
     },
     "supportsHighlight": true,
+    "supportsSynchronizingFilterState": true,
+    "supportsKeyboardFocus": true,
+    "supportsOnObjectFormatting": true,
+    "supportsEmptyDataView": true,
+    "advancedEditModeSupport": 1,
     "keepAllMetadataColumns": true,
     "supportsLandingPage": true,
     "supportsMultiVisualSelection": true,

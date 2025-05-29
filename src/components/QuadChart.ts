@@ -171,6 +171,15 @@ export class QuadChart {
                         }
                     });
                 }
+
+                if (labelElement) {
+                    this.tooltipServiceWrapper.addTooltip(
+                    labelElement,
+                        () => tooltipDataItems,
+                        () => selectionId
+                    );
+                }
+
             }
         }
     }
